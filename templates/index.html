@@ -17,16 +17,34 @@
     <hr>
     <!-- personal info -->
     <form action="/" autocomplete="off" method="POST">
-        <h2>Personal Information</h2>
         <div class="my-4">
+            <h2>Personal Information</h2>
             <input class="form-control my-2 w-auto" name="firstname" type="text" placeholder="First Name" required>
             <input class="form-control my-2 w-auto" name="lastname" type="text" placeholder="Last Name" required>
             <input class="form-control my-2 w-auto" name="address" type="text" placeholder="Address">
             <input class="form-control my-2 w-auto" name="phonenumber" type="number" placeholder="Phone Number">
             <input class="form-control my-2 w-auto" name="email" type="email" placeholder="Email">
         </div>
+        <!-- target job title -->
+        <div class="my-4">
+            <h2>Target Job Title</h2>
+            <input class="form-control my-2 w-auto" type="text" name="target-job-title"
+                placeholder="Software Developer">
+        </div>
         <!-- experience -->
-        <!-- <h2>Experience</h2> -->
+        <div class="my-4">
+            <h2>Experience</h2>
+            <label class="text-secondary">Job Title</label>
+            <input class="form-control mb-2 w-auto" type="text" name="job-title">
+            <label class="text-secondary">Company</label>
+            <input class="form-control mb-2 w-auto" type="text" name="company">
+            <label class="text-secondary">City, State, Country</label>
+            <input class="form-control mb-2 w-auto" type="text" name="job-address">
+            <label class="text-secondary">Start date</label>
+            <input class="form-control mb-2 w-auto" type="month" name="start-exp">
+            <label class="text-secondary">End date</label>
+            <input class="form-control mb-2 w-auto" type="month" name="end-exp">
+        </div>
 
         <button class="btn btn-primary w-auto" type="submit">Generate CV</button>
 
