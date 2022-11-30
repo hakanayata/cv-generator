@@ -125,10 +125,10 @@ def main():
 def get_personal_info():
     """Returns personal information"""
     # PERSONAL INFORMATION
-    first_name = request.form.get("firstname").upper()
-    last_name = request.form.get("lastname").upper()
-    address = request.form.get("address").capitalize()
-    phone_number = request.form.get("phonenumber").capitalize()
+    first_name = request.form.get("firstname").strip().upper()
+    last_name = request.form.get("lastname").strip().upper()
+    address = request.form.get("address").strip().capitalize()
+    phone_number = request.form.get("phonenumber").strip().capitalize()
     email = request.form.get("email")
     return (first_name, last_name, address, phone_number, email)
 
@@ -136,18 +136,18 @@ def get_personal_info():
 def get_target_job_title():
     """Returns target job title"""
     # TARGET JOB TITLE
-    target_job_title = request.form.get("target-job-title").upper()
+    target_job_title = request.form.get("target-job-title").strip().upper()
     return target_job_title
 
 
 def get_experience():
     """Returns experience details"""
     # EXPERIENCE
-    job_title = request.form.get("job-title").title()
-    company = request.form.get("company")
-    job_address = request.form.get("job-address")
-    start_experience = request.form.get("start-exp")
-    end_experience = request.form.get("end-exp")
+    job_title = request.form.get("job-title").strip().title()
+    company = request.form.get("company").strip()
+    job_address = request.form.get("job-address").strip()
+    start_experience = request.form.get("start-exp").strip()
+    end_experience = request.form.get("end-exp").strip()
     formatted_start_exp = date_formatter(start_experience)
     formatted_end_exp = date_formatter(end_experience)
     exp_duration = experience_calculator(start_experience, end_experience)
@@ -157,9 +157,9 @@ def get_experience():
 def get_education():
     """Returns education details"""
     # EDUCATION
-    school = request.form.get("school").title()
-    degree = request.form.get("degree").capitalize()
-    study_field = request.form.get("study-field").title()
+    school = request.form.get("school").strip().title()
+    degree = request.form.get("degree").strip().capitalize()
+    study_field = request.form.get("study-field").strip().title()
     start_education = request.form.get("start-edu")
     end_education = request.form.get("end-edu")
     formatted_start_edu = date_formatter(start_education)
