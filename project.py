@@ -39,7 +39,9 @@ def main():
         # EDUCATION
         school, degree, study_field, formatted_start_edu, formatted_end_edu = get_education()
 
+        # create an instance of FPDF class
         pdf = FPDF(orientation="P", unit="mm", format="A4")
+        # create an empty page
         pdf.add_page()
         # ? PERSONAL INFORMATION
         # ! Name
