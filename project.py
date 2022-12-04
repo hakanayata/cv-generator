@@ -1,12 +1,21 @@
 from flask import Flask, redirect, render_template, request, make_response
 from fpdf import FPDF
 from datetime import date, datetime
+from PIL import Image
+import os
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
+
+UPLOAD_FOLDER = 'static'
+ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 
 # configure application
 app = Flask(__name__)
 
 # ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+# upload folder
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 # ensure responses aren't cached
@@ -29,6 +38,7 @@ def main():
 
         # PERSONAL INFORMATION
         first_name, last_name, address, phone_number, email = get_personal_info()
+        picture_name = get_picture()
 
         # TARGET JOB TITLE
         target_job_title = get_target_job_title()
@@ -39,22 +49,31 @@ def main():
         # EDUCATION
         school, degree, study_field, formatted_start_edu, formatted_end_edu = get_education()
 
+        # CAREER OBJECTIVE
+        career_objective = get_objective()
+
+        # SKILLS
+        skills = get_skills()
+
         # create an instance of FPDF class
         pdf = FPDF(orientation="P", unit="mm", format="A4")
         # create an empty page
         pdf.add_page()
         # ? PERSONAL INFORMATION
+        # ! Picture
+        pdf.image(f"static/{picture_name}", x=10, y=10,
+                  h=60, alt_text="profile picture")
         # ! Name
         pdf.set_font("Helvetica", "B", size=24)
         pdf.set_fill_color(20, 20, 70)
         pdf.set_text_color(250, 250, 250)
         # page width 210mm but default margin 1cm from left + right
         pdf.cell(
-            w=190, h=12, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
+            w=190, h=60, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
 
         # ! Contact
-        pdf.set_font("Helvetica", "", size=9)
-        pdf.set_fill_color(20, 20, 70)
+        pdf.set_font("Helvetica", "", size=10)
+        pdf.set_fill_color(120, 20, 70)
         pdf.set_text_color(250, 250, 250)
         pdf.cell(
             w=190, h=6, txt=f"{address} | {phone_number} | {email}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
@@ -66,7 +85,16 @@ def main():
         pdf.set_text_color(20, 20, 70)
         pdf.cell(w=190, h=10, txt=f"{target_job_title}", align="C",
                  new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(4)
 
+        # ? CAREER OBJECTIVE
+        pdf.set_font("Helvetica", "", size=12)
+        pdf.set_fill_color(240, 240, 240)
+        pdf.set_text_color(20, 20, 20)
+        pdf.multi_cell(w=190, h=8, txt=f"{career_objective}", border=1, fill=True,
+                       align="L", new_x="LMARGIN", new_y="NEXT")
+
+        # line break
         pdf.ln(4)
 
         # ? EXPERIENCE
@@ -114,6 +142,34 @@ def main():
         pdf.cell(w=190, h=6, txt=f"{degree}, {study_field} | {formatted_start_edu} - {formatted_end_edu}",
                  align="L", new_x="LMARGIN", new_y="NEXT")
 
+        pdf.ln(4)
+
+        # ? SKILLS
+        # ! title
+        pdf.set_font("Helvetica", "B", size=14)
+        pdf.set_fill_color(10, 10, 50)
+        pdf.set_text_color(250, 250, 250)
+        pdf.cell(w=190, h=8, txt=f"SKILLS", align="C",
+                 fill=True, new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(4)
+
+        # ! skills
+        pdf.set_font("Helvetica", "", size=12)
+        pdf.set_text_color(20, 20, 70)
+        for skill in skills:
+            pdf.cell(w=190, h=8, txt=f"- {skill}",
+                     align="L", new_x="LMARGIN", new_y="NEXT")
+        # pdf.cell(w=190, h=8, txt=f"- {skill1}",
+        #          align="L", new_x="LMARGIN", new_y="NEXT")
+        # pdf.cell(w=190, h=8, txt=f"- {skill2}",
+        #          align="L", new_x="LMARGIN", new_y="NEXT")
+        # pdf.cell(w=190, h=8, txt=f"- {skill3}",
+        #          align="L", new_x="LMARGIN", new_y="NEXT")
+        # pdf.cell(w=190, h=8, txt=f"- {skill4}",
+        #          align="L", new_x="LMARGIN", new_y="NEXT")
+        # pdf.cell(w=190, h=8, txt=f"- {skill5}",
+        #          align="L", new_x="LMARGIN", new_y="NEXT")
+
         # ? END
         # title of pdf
         pdf.set_title(f"{last_name}-CV")
@@ -122,22 +178,17 @@ def main():
         return response
 
 
-def get_personal_info():
-    """Returns personal information"""
-    # PERSONAL INFORMATION
-    first_name = request.form.get("firstname").strip().upper()
-    last_name = request.form.get("lastname").strip().upper()
-    address = request.form.get("address").strip().capitalize()
-    phone_number = request.form.get("phonenumber").strip()
-    email = request.form.get("email")
-    return (first_name, last_name, address, phone_number, email)
-
-
-def get_target_job_title():
-    """Returns target job title"""
-    # TARGET JOB TITLE
-    target_job_title = request.form.get("target-job-title").strip().upper()
-    return target_job_title
+def get_education():
+    """Returns education details"""
+    # EDUCATION
+    school = request.form.get("school").strip().title()
+    degree = request.form.get("degree").strip().capitalize()
+    study_field = request.form.get("study-field").strip().title()
+    start_education = request.form.get("start-edu")
+    end_education = request.form.get("end-edu")
+    formatted_start_edu = date_formatter(start_education)
+    formatted_end_edu = date_formatter(end_education)
+    return school, degree, study_field, formatted_start_edu, formatted_end_edu
 
 
 def get_experience():
@@ -154,17 +205,54 @@ def get_experience():
     return job_title, company, job_address, formatted_start_exp, formatted_end_exp, exp_duration
 
 
-def get_education():
-    """Returns education details"""
-    # EDUCATION
-    school = request.form.get("school").strip().title()
-    degree = request.form.get("degree").strip().capitalize()
-    study_field = request.form.get("study-field").strip().title()
-    start_education = request.form.get("start-edu")
-    end_education = request.form.get("end-edu")
-    formatted_start_edu = date_formatter(start_education)
-    formatted_end_edu = date_formatter(end_education)
-    return school, degree, study_field, formatted_start_edu, formatted_end_edu
+def get_personal_info():
+    """Returns personal information"""
+    # PERSONAL INFORMATION
+    first_name = request.form.get("firstname").strip().upper()
+    last_name = request.form.get("lastname").strip().upper()
+    address = request.form.get("address").strip().capitalize()
+    phone_number = request.form.get("phonenumber").strip()
+    email = request.form.get("email")
+    return (first_name, last_name, address, phone_number, email)
+
+
+def get_picture():
+    """Returns picture"""
+    file = request.files["picture"]
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(
+        app.config['UPLOAD_FOLDER'], filename))
+    print(file)
+    print(filename)
+    return filename
+
+
+def get_skills():
+    """Returns skills"""
+    skills_list = []
+    skills = request.form.get("skills").strip().split(", ")
+    for skill in skills:
+        skills_list.append(skill)
+
+    # skill2 = request.form.get("skill2").strip()
+    # skill3 = request.form.get("skill3").strip()
+    # skill4 = request.form.get("skill4").strip()
+    # skill5 = request.form.get("skill5").strip()
+    return skills
+
+
+def get_target_job_title():
+    """Returns target job title"""
+    # TARGET JOB TITLE
+    target_job_title = request.form.get("target-job-title").strip().upper()
+    return target_job_title
+
+
+def get_objective():
+    """Returns career objective"""
+    # CAREER OBJECTIVE
+    objective = request.form.get("objective").strip().capitalize()
+    return objective
 
 
 def date_formatter(s):
