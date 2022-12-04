@@ -1,4 +1,5 @@
-from flask import Flask, redirect, render_template, request, make_response
+from flask import Flask, redirect, render_template, request, make_response, flash, session
+from flask_session import Session
 from fpdf import FPDF
 from datetime import date, datetime
 from PIL import Image
@@ -7,16 +8,24 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from email_validator import validate_email, EmailNotValidError
 
-UPLOAD_FOLDER = 'static'
-ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 
 # configure application
 app = Flask(__name__)
+
+UPLOAD_FOLDER = 'static'
+ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 
 # ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 # upload folder
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+# set max limit for file upload (rather allowed payload) to 5MB
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1000 * 1000
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 
 # ensure responses aren't cached
@@ -38,17 +47,34 @@ def main():
     elif request.method == "POST":
 
         # PERSONAL INFORMATION
-        first_name, last_name, address, phone_number, email = get_personal_info()
-        picture_name = get_picture()
+        try:
+            first_name, last_name, address, phone_number, email = get_personal_info()
+        except:
+            flash('Missing field in "Personal Info" section!')
+            return redirect("/")
+
+        try:
+            picture_name = get_picture()
+        except:
+            flash('Missing image file!')
+            return redirect("/")
 
         # TARGET JOB TITLE
         target_job_title = get_target_job_title()
 
         # EXPERIENCE
-        job_title, company, job_address, formatted_start_exp, formatted_end_exp, exp_duration = get_experience()
+        try:
+            job_title, company, job_address, formatted_start_exp, formatted_end_exp, exp_duration = get_experience()
+        except:
+            flash('Missing field in "EXPERIENCE" section!')
+            return redirect("/")
 
         # EDUCATION
-        school, degree, study_field, formatted_start_edu, formatted_end_edu = get_education()
+        try:
+            school, degree, study_field, formatted_start_edu, formatted_end_edu = get_education()
+        except:
+            flash('Missing field in "EDUCATION" section!')
+            return redirect("/")
 
         # CAREER OBJECTIVE
         career_objective = get_objective()
@@ -188,6 +214,12 @@ def main():
         return response
 
 
+def allowed_file(filename):
+    """Return true if extension is allowed"""
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 def get_education():
     """Returns education details"""
     # EDUCATION
@@ -225,16 +257,25 @@ def get_personal_info():
     email = request.form.get("email")
     return (first_name, last_name, address, phone_number, email)
 
+# ! check if allowed_file() and get_picture() works
+# ! when there's no picture or different format uploaded
+
+# ? Try file storage if time suffices
+# ? https://stackoverflow.com/questions/20015550/read-file-data-without-saving-it-in-flask
+# ? https://werkzeug.palletsprojects.com/en/2.2.x/datastructures/#werkzeug.datastructures.FileStorage
+
 
 def get_picture():
-    """Returns picture"""
+    """Returns name of img file"""
     file = request.files["picture"]
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(
-        app.config['UPLOAD_FOLDER'], filename))
-    print(file)
-    print(filename)
-    return filename
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename))
+        return filename
+    else:
+        flash("Must provide image file!")
+        return redirect("/")
 
 
 def get_skills():
