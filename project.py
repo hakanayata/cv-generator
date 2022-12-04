@@ -297,9 +297,5 @@ def experience_calculator(date1, date2):
             return f"{diff_in_years} {'years' if diff_in_years > 1 else 'year'}{', ' if diff_in_months > 0 else ''}{diff_in_months if diff_in_months > 0 else ''}{' ' if diff_in_months > 0 else ''}{'month' if diff_in_months == 1 else ''}{'months' if diff_in_months > 1 else ''}"
 
 
-def phone_number_formatter(n):
-    re.search(r"^")
-
-
 if __name__ == "__main__":
     main()
