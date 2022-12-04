@@ -5,6 +5,7 @@ from PIL import Image
 import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
+from email_validator import validate_email, EmailNotValidError
 
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
@@ -61,15 +62,30 @@ def main():
         pdf.add_page()
         # ? PERSONAL INFORMATION
         # ! Picture
-        pdf.image(f"static/{picture_name}", x=10, y=10,
-                  h=60, alt_text="profile picture")
+        pdf.set_font("Helvetica", "B", size=24)
+        pdf.set_fill_color(20, 20, 70)
+        pdf.set_text_color(250, 250, 250)
+        pdf.cell(w=190, h=44,
+                 align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
+        # get image size with PILLOW
+        img = Image.open(f"static/{picture_name}")
+        width, height = img.size
+        # calculate the constant, that convert the picture to have a desired height of 40 mm
+        constant = height / 40
+        # calculate the width with that constant
+        width = width / constant
+        # set image horizontally in the middle
+        pdf.image(f"static/{picture_name}", x=(210/2) - width/2, y=14,
+                  h=40, alt_text="profile picture")
+        # pdf.round_clip(x=10, y=10, r=50)
+
         # ! Name
         pdf.set_font("Helvetica", "B", size=24)
         pdf.set_fill_color(20, 20, 70)
         pdf.set_text_color(250, 250, 250)
         # page width 210mm but default margin 1cm from left + right
         pdf.cell(
-            w=190, h=60, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
+            w=190, h=20, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
 
         # ! Contact
         pdf.set_font("Helvetica", "", size=10)
@@ -115,7 +131,9 @@ def main():
         # ! company, adress, dates, duration
         pdf.set_font("Helvetica", "", size=12)
         pdf.set_text_color(20, 20, 70)
-        pdf.cell(w=190, h=6, txt=f"{company} - {job_address} | {formatted_start_exp} - {formatted_end_exp} | {exp_duration}",
+        pdf.cell(w=190, h=6, txt=f"{company} | {job_address}",
+                 align="L", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(w=190, h=6, txt=f"{formatted_start_exp} - {formatted_end_exp} | {exp_duration}",
                  align="L", new_x="LMARGIN", new_y="NEXT")
 
         pdf.ln(4)
@@ -139,7 +157,9 @@ def main():
         # ! degree, field, dates
         pdf.set_font("Helvetica", "", size=12)
         pdf.set_text_color(20, 20, 70)
-        pdf.cell(w=190, h=6, txt=f"{degree}, {study_field} | {formatted_start_edu} - {formatted_end_edu}",
+        pdf.cell(w=190, h=6, txt=f"{degree}, {study_field}",
+                 align="L", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(w=190, h=6, txt=f"{formatted_start_edu} - {formatted_end_edu}",
                  align="L", new_x="LMARGIN", new_y="NEXT")
 
         pdf.ln(4)
@@ -159,16 +179,6 @@ def main():
         for skill in skills:
             pdf.cell(w=190, h=8, txt=f"- {skill}",
                      align="L", new_x="LMARGIN", new_y="NEXT")
-        # pdf.cell(w=190, h=8, txt=f"- {skill1}",
-        #          align="L", new_x="LMARGIN", new_y="NEXT")
-        # pdf.cell(w=190, h=8, txt=f"- {skill2}",
-        #          align="L", new_x="LMARGIN", new_y="NEXT")
-        # pdf.cell(w=190, h=8, txt=f"- {skill3}",
-        #          align="L", new_x="LMARGIN", new_y="NEXT")
-        # pdf.cell(w=190, h=8, txt=f"- {skill4}",
-        #          align="L", new_x="LMARGIN", new_y="NEXT")
-        # pdf.cell(w=190, h=8, txt=f"- {skill5}",
-        #          align="L", new_x="LMARGIN", new_y="NEXT")
 
         # ? END
         # title of pdf
@@ -181,9 +191,9 @@ def main():
 def get_education():
     """Returns education details"""
     # EDUCATION
-    school = request.form.get("school").strip().title()
+    school = request.form.get("school").strip()
     degree = request.form.get("degree").strip().capitalize()
-    study_field = request.form.get("study-field").strip().title()
+    study_field = request.form.get("study-field").strip()
     start_education = request.form.get("start-edu")
     end_education = request.form.get("end-edu")
     formatted_start_edu = date_formatter(start_education)
@@ -233,11 +243,6 @@ def get_skills():
     skills = request.form.get("skills").strip().split(", ")
     for skill in skills:
         skills_list.append(skill)
-
-    # skill2 = request.form.get("skill2").strip()
-    # skill3 = request.form.get("skill3").strip()
-    # skill4 = request.form.get("skill4").strip()
-    # skill5 = request.form.get("skill5").strip()
     return skills
 
 
@@ -290,6 +295,10 @@ def experience_calculator(date1, date2):
                 diff_in_months = 0
 
             return f"{diff_in_years} {'years' if diff_in_years > 1 else 'year'}{', ' if diff_in_months > 0 else ''}{diff_in_months if diff_in_months > 0 else ''}{' ' if diff_in_months > 0 else ''}{'month' if diff_in_months == 1 else ''}{'months' if diff_in_months > 1 else ''}"
+
+
+def phone_number_formatter(n):
+    re.search(r"^")
 
 
 if __name__ == "__main__":
