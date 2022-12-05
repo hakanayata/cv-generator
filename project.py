@@ -263,6 +263,7 @@ def get_personal_info():
 # ? Try file storage if time suffices
 # ? https://stackoverflow.com/questions/20015550/read-file-data-without-saving-it-in-flask
 # ? https://werkzeug.palletsprojects.com/en/2.2.x/datastructures/#werkzeug.datastructures.FileStorage
+# ? https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 
 
 def get_picture():
