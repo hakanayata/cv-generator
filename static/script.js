@@ -19,8 +19,6 @@ addBtn.addEventListener('click', () => {
         exp_counter.setAttribute("value", `${times_pressed + 1}`)
         exp_counter.setAttribute("style", "display: none;")
         exp_counter.setAttribute("name", "exp-counter")
-        console.log(exp_counter)
-        console.log(typeof (exp_counter))
 
         // hr between each exp
         let hr = document.createElement("hr")
@@ -111,7 +109,7 @@ count_edu = 0
 addBtnEdu.addEventListener('click', () => {
 
     // max 4 extra exp allowed
-    if (count_edu < 5) {
+    if (count_edu < 4) {
 
         count_edu++
 
@@ -120,8 +118,6 @@ addBtnEdu.addEventListener('click', () => {
         edu_counter.setAttribute("value", `${count_edu + 1}`)
         edu_counter.setAttribute("style", "display: none;")
         edu_counter.setAttribute("name", "edu-counter")
-        console.log(edu_counter)
-        console.log(typeof (edu_counter))
 
         // hr between each edu
         let hr = document.createElement("hr")
