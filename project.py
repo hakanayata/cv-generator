@@ -48,7 +48,8 @@ def main():
 
         # get number of exp
         experience_count = get_count_experience()
-        print(f"############ {experience_count} #############")
+        # get number of edu
+        education_count = get_count_education()
 
         # PERSONAL INFORMATION
         try:
@@ -66,13 +67,7 @@ def main():
         # TARGET JOB TITLE
         target_job_title = get_target_job_title()
 
-        # xxx OLD VERSION xxx
-        # try:
-        #     job_title, company, job_address, formatted_start_exp, formatted_end_exp, exp_duration = get_experience()
-        # except:
-        #     flash('Missing field in "EXPERIENCE" section!')
-        #     return redirect("/")
-
+        # EXPERIENCE
         try:
             job_titles, companies, job_addresses, formatted_start_exps, formatted_end_exps, exp_durations = get_experience()
         except:
@@ -81,7 +76,7 @@ def main():
 
         # EDUCATION
         try:
-            school, degree, study_field, formatted_start_edu, formatted_end_edu = get_education()
+            schools, degrees, study_fields, formatted_start_edus, formatted_end_edus = get_education()
         except:
             flash('Missing field in "EDUCATION" section!')
             return redirect("/")
@@ -188,22 +183,29 @@ def main():
                  fill=True, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
-        # ! school
-        pdf.set_font("Helvetica", "B", size=12)
-        pdf.set_fill_color(240, 240, 240)
-        pdf.set_text_color(40, 40, 40)
-        pdf.cell(w=190, h=6, txt=f"{school}", align="L",
-                 fill=True, new_x="LMARGIN", new_y="NEXT")
+        # ? -------------------EDU-------------------------
 
-        # ! degree, field, dates
-        pdf.set_font("Helvetica", "", size=12)
-        pdf.set_text_color(20, 20, 70)
-        pdf.cell(w=190, h=6, txt=f"{degree}, {study_field}",
-                 align="L", new_x="LMARGIN", new_y="NEXT")
-        pdf.cell(w=190, h=6, txt=f"{formatted_start_edu} - {formatted_end_edu}",
-                 align="L", new_x="LMARGIN", new_y="NEXT")
+        for i in range(education_count):
+            # ! school
+            pdf.set_font("Helvetica", "B", size=12)
+            pdf.set_fill_color(240, 240, 240)
+            pdf.set_text_color(40, 40, 40)
+            pdf.cell(w=190, h=6, txt=f"{schools[i]}", align="L",
+                     fill=True, new_x="LMARGIN", new_y="NEXT")
 
-        pdf.ln(4)
+            # ! degree, field, dates
+            pdf.set_font("Helvetica", "", size=12)
+            pdf.set_text_color(20, 20, 70)
+            pdf.cell(w=190, h=6, txt=f"{degrees[i]}, {study_fields[i]}",
+                     align="L", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(w=190, h=6, txt=f"{formatted_start_edus[i]} - {formatted_end_edus[i]}",
+                     align="L", new_x="LMARGIN", new_y="NEXT")
+
+            pdf.ln(2)
+
+        # pdf.ln(2)
+
+        # ? -------------------EDU-------------------------
 
         # ? SKILLS
         # ! title
@@ -235,33 +237,47 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def get_education():
-    """Returns education details"""
-    # EDUCATION
-    school = request.form.get("school").strip()
-    degree = request.form.get("degree").strip().capitalize()
-    study_field = request.form.get("study-field").strip()
-    start_education = request.form.get("start-edu")
-    end_education = request.form.get("end-edu")
-    formatted_start_edu = date_formatter(start_education)
-    formatted_end_edu = date_formatter(end_education)
-    return school, degree, study_field, formatted_start_edu, formatted_end_edu
+# def get_education():
+#     """Returns education details"""
+#     # EDUCATION
+#     school = request.form.get("school").strip()
+#     degree = request.form.get("degree").strip().capitalize()
+#     study_field = request.form.get("study-field").strip()
+#     start_education = request.form.get("start-edu")
+#     end_education = request.form.get("end-edu")
+#     formatted_start_edu = date_formatter(start_education)
+#     formatted_end_edu = date_formatter(end_education)
+#     return school, degree, study_field, formatted_start_edu, formatted_end_edu
 
 # ? ------------------------------
 
 
-def get_mult_edu():
+def get_education():
     """Returns education details for multiple education sections"""
     # number of education
     edu_counter = get_count_education()
     # initial lists for multiple inputs
-    shools = []
+    schools = []
     degrees = []
-    fields = []
+    study_fields = []
     formatted_start_edus = []
     formatted_end_edus = []
 
-    pass
+    for i in range(edu_counter):
+        school = request.form.get(f"school{i}").strip()
+        degree = request.form.get(f"degree{i}").strip().capitalize()
+        study_field = request.form.get(f"study-field{i}").strip()
+        start_education = request.form.get(f"start-edu{i}")
+        end_education = request.form.get(f"end-edu{i}")
+        formatted_start_edu = date_formatter(start_education)
+        formatted_end_edu = date_formatter(end_education)
+        schools.append(school)
+        degrees.append(degree)
+        study_fields.append(study_field)
+        formatted_start_edus.append(formatted_start_edu)
+        formatted_end_edus.append(formatted_end_edu)
+
+    return schools, degrees, study_fields, formatted_start_edus, formatted_end_edus
 
 
 # ? ------------------------------
