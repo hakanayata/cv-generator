@@ -8,6 +8,9 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from email_validator import validate_email, EmailNotValidError
 
+# todo: validations
+# todo: test: add 2 extra exp/edu but leave 1 without filling
+# todo: sort by dates in EXP and EDU sections
 
 # configure application
 app = Flask(__name__)
@@ -45,11 +48,6 @@ def main():
         return render_template("index.html")
 
     elif request.method == "POST":
-
-        # get number of exp
-        experience_count = get_count_experience()
-        # get number of edu
-        education_count = get_count_education()
 
         # PERSONAL INFORMATION
         try:
@@ -153,9 +151,8 @@ def main():
                  fill=True, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
-        # ? ----------------------------------------------------
-        # iterate over experiences list
-        for i in range(experience_count):
+        # iterate over experiences list (length is same for each list, job_titles taken in this case)
+        for i in range(len(job_titles)):
             # ! job title
             pdf.set_font("Helvetica", "B", size=12)
             pdf.set_fill_color(240, 240, 240)
@@ -172,8 +169,6 @@ def main():
 
             pdf.ln(2)
 
-        # ? ----------------------------------------------------
-
         # ? EDUCATION
         # ! title
         pdf.set_font("Helvetica", "B", size=14)
@@ -183,9 +178,7 @@ def main():
                  fill=True, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
-        # ? -------------------EDU-------------------------
-
-        for i in range(education_count):
+        for i in range(len(schools)):
             # ! school
             pdf.set_font("Helvetica", "B", size=12)
             pdf.set_fill_color(240, 240, 240)
@@ -203,10 +196,6 @@ def main():
 
             pdf.ln(2)
 
-        # pdf.ln(2)
-
-        # ? -------------------EDU-------------------------
-
         # ? SKILLS
         # ! title
         pdf.set_font("Helvetica", "B", size=14)
@@ -216,11 +205,10 @@ def main():
                  fill=True, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
-        # ! skills
-        pdf.set_font("Helvetica", "", size=12)
-        pdf.set_text_color(20, 20, 70)
-        for skill in skills:
-            pdf.cell(w=190, h=8, txt=f"- {skill}",
+        for i in range(len(skills)):
+            pdf.set_font("Helvetica", "", size=12)
+            pdf.set_text_color(20, 20, 70)
+            pdf.cell(w=190, h=8, txt=f"- {skills[i]}",
                      align="L", new_x="LMARGIN", new_y="NEXT")
 
         # ? END
@@ -237,98 +225,52 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# def get_education():
-#     """Returns education details"""
-#     # EDUCATION
-#     school = request.form.get("school").strip()
-#     degree = request.form.get("degree").strip().capitalize()
-#     study_field = request.form.get("study-field").strip()
-#     start_education = request.form.get("start-edu")
-#     end_education = request.form.get("end-edu")
-#     formatted_start_edu = date_formatter(start_education)
-#     formatted_end_edu = date_formatter(end_education)
-#     return school, degree, study_field, formatted_start_edu, formatted_end_edu
-
-# ? ------------------------------
-
-
 def get_education():
     """Returns education details for multiple education sections"""
-    # number of education
-    edu_counter = get_count_education()
-    # initial lists for multiple inputs
-    schools = []
-    degrees = []
-    study_fields = []
     formatted_start_edus = []
     formatted_end_edus = []
 
-    for i in range(edu_counter):
-        school = request.form.get(f"school{i}").strip()
-        degree = request.form.get(f"degree{i}").strip().capitalize()
-        study_field = request.form.get(f"study-field{i}").strip()
-        start_education = request.form.get(f"start-edu{i}")
-        end_education = request.form.get(f"end-edu{i}")
-        formatted_start_edu = date_formatter(start_education)
-        formatted_end_edu = date_formatter(end_education)
-        schools.append(school)
-        degrees.append(degree)
-        study_fields.append(study_field)
-        formatted_start_edus.append(formatted_start_edu)
-        formatted_end_edus.append(formatted_end_edu)
+    schools = request.form.getlist("school")
+
+    degrees = request.form.getlist("degree")
+
+    study_fields = request.form.getlist("study-field")
+
+    start_educations = request.form.getlist("start-edu")
+
+    end_educations = request.form.getlist("end-edu")
+    # iterate over every education start and end dates
+    for i in range(len(start_educations)):
+        formatted_start_edus.append(date_formatter(start_educations[i]))
+        formatted_end_edus.append(date_formatter(end_educations[i]))
+
+    print(f"{start_educations}")
+    print(f"{end_educations}")
 
     return schools, degrees, study_fields, formatted_start_edus, formatted_end_edus
 
 
-# ? ------------------------------
-
-
-# def get_experience():
-#     """Returns experience details"""
-#     # EXPERIENCE
-#     job_title = request.form.get("job-title").strip().title()
-#     company = request.form.get("company").strip()
-#     job_address = request.form.get("job-address").strip()
-#     start_experience = request.form.get("start-exp")
-#     end_experience = request.form.get("end-exp")
-#     formatted_start_exp = date_formatter(start_experience)
-#     formatted_end_exp = date_formatter(end_experience)
-#     exp_duration = experience_calculator(start_experience, end_experience)
-#     return job_title, company, job_address, formatted_start_exp, formatted_end_exp, exp_duration
-
-
 def get_experience():
     """Returns experience details for multiple experience sections"""
-    # number of experience
-    exp_counter = get_count_experience()
     # initial lists for multiple inputs
-    job_titles = []
-    companies = []
-    job_addresses = []
-    # start_experiences = []
-    # end_experiences = []
     formatted_start_exps = []
     formatted_end_exps = []
     exp_durations = []
 
-    # iterate over inputs
-    for i in range(exp_counter):
-        job_title = request.form.get(f"job-title{i}").strip().title()
-        company = request.form.get(f"company{i}").strip()
-        job_address = request.form.get(f"job-address{i}").strip()
-        start_experience = request.form.get(f"start-exp{i}")
-        end_experience = request.form.get(f"end-exp{i}")
-        formatted_start_exp = date_formatter(start_experience)
-        formatted_end_exp = date_formatter(end_experience)
-        exp_duration = experience_calculator(start_experience, end_experience)
-        job_titles.append(job_title)
-        companies.append(company)
-        job_addresses.append(job_address)
-        # start_experiences.append(start_experience)
-        # end_experiences.append(end_experience)
-        formatted_start_exps.append(formatted_start_exp)
-        formatted_end_exps.append(formatted_end_exp)
-        exp_durations.append(exp_duration)
+    job_titles = request.form.getlist("job-title")
+
+    companies = request.form.getlist("company")
+
+    job_addresses = request.form.getlist("job-address")
+
+    start_experiences = request.form.getlist("start-exp")
+
+    end_experiences = request.form.getlist("end-exp")
+    for i in range(len(start_experiences)):
+        formatted_start_exps.append(date_formatter(start_experiences[i]))
+        formatted_end_exps.append(date_formatter(end_experiences[i]))
+        exp_durations.append(get_duration(
+            start_experiences[i], end_experiences[i]))
 
     return job_titles, companies, job_addresses, formatted_start_exps, formatted_end_exps, exp_durations
 
@@ -365,13 +307,15 @@ def get_picture():
         return redirect("/")
 
 
+# ? -------- SKILLS ------------
+
 def get_skills():
-    """Returns skills"""
-    skills_list = []
-    skills = request.form.get("skills").strip().split(", ")
-    for skill in skills:
-        skills_list.append(skill)
+    """Returns multiple inputs from skills section"""
+    skills = request.form.getlist("skill")
+
     return skills
+
+# ? -------- SKILLS ------------
 
 
 def get_target_job_title():
@@ -394,7 +338,7 @@ def date_formatter(s):
     return f"{int(month):02}.{year}"
 
 
-def experience_calculator(date1, date2):
+def get_duration(date1, date2):
     """Calculates the duration between two dates"""
 
     try:
@@ -423,24 +367,6 @@ def experience_calculator(date1, date2):
                 diff_in_months = 0
 
             return f"{diff_in_years} {'years' if diff_in_years > 1 else 'year'}{', ' if diff_in_months > 0 else ''}{diff_in_months if diff_in_months > 0 else ''}{' ' if diff_in_months > 0 else ''}{'month' if diff_in_months == 1 else ''}{'months' if diff_in_months > 1 else ''}"
-
-
-def get_count_experience():
-    try:
-        exp_count = int(request.form.get("exp-counter"))
-    except:
-        exp_count = 1
-
-    return exp_count
-
-
-def get_count_education():
-    try:
-        edu_count = int(request.form.get("edu-counter"))
-    except:
-        edu_count = 1
-
-    return edu_count
 
 
 if __name__ == "__main__":
