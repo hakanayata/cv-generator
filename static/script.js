@@ -1,24 +1,27 @@
 // refrence: https://www.geeksforgeeks.org/how-to-create-a-form-dynamically-with-the-javascript/
 
+// todo: dynamic experience form
 
 // select experience div and 'add new' button
 const exp_section = document.getElementById("accordion-body-exp")
 const addBtn = document.getElementById("add-exp")
+
 // number of times pressed
-let times_pressed = 0
+let count_extra_exp = 0
+
+// ! removable
+// hidden input for extra experience counter
+// let exp_counter = document.createElement("input")
+// exp_counter.setAttribute("value", `${count_extra_exp}`)
+// exp_counter.setAttribute("style", "display: none;")
+// exp_counter.setAttribute("name", "exp-counter")
+// exp_section.appendChild(exp_counter)
 
 addBtn.addEventListener('click', () => {
 
     // max 4 extra exp allowed
-    if (times_pressed < 4) {
+    if (count_extra_exp < 4) {
 
-        times_pressed++
-
-        // exp counter
-        let exp_counter = document.createElement("input")
-        exp_counter.setAttribute("value", `${times_pressed + 1}`)
-        exp_counter.setAttribute("style", "display: none;")
-        exp_counter.setAttribute("name", "exp-counter")
 
         // hr between each exp
         let hr = document.createElement("hr")
@@ -32,7 +35,7 @@ addBtn.addEventListener('click', () => {
         let job_title = document.createElement("input")
         job_title.setAttribute("class", "form-control my-2 w-auto")
         job_title.setAttribute("type", "text")
-        job_title.setAttribute("name", `job-title${times_pressed}`)
+        job_title.setAttribute("name", "job-title")
         // COMPANY
         // label el for company
         let label_company = document.createElement("label")
@@ -42,7 +45,7 @@ addBtn.addEventListener('click', () => {
         let company = document.createElement("input")
         company.setAttribute("class", "form-control my-2 w-auto")
         company.setAttribute("type", "text")
-        company.setAttribute("name", `company${times_pressed}`)
+        company.setAttribute("name", "company")
         // JOB / EXPERIENCE ADDRESS
         // label el for job-address
         let label_address = document.createElement("label")
@@ -52,7 +55,7 @@ addBtn.addEventListener('click', () => {
         let job_address = document.createElement("input")
         job_address.setAttribute("class", "form-control my-2 w-auto")
         job_address.setAttribute("type", "text")
-        job_address.setAttribute("name", `job-address${times_pressed}`)
+        job_address.setAttribute("name", "job-address")
         // EXP START DATE
         // label for exp start date
         let label_start_exp = document.createElement("label")
@@ -62,7 +65,7 @@ addBtn.addEventListener('click', () => {
         let start_experience = document.createElement("input")
         start_experience.setAttribute("class", "form-control my-2 w-auto")
         start_experience.setAttribute("type", "month")
-        start_experience.setAttribute("name", `start-exp${times_pressed}`)
+        start_experience.setAttribute("name", "start-exp")
         // EXP END DATE
         // label for exp end date
         let label_end_exp = document.createElement("label")
@@ -72,7 +75,7 @@ addBtn.addEventListener('click', () => {
         let end_experience = document.createElement("input")
         end_experience.setAttribute("class", "form-control my-2 w-auto")
         end_experience.setAttribute("type", "month")
-        end_experience.setAttribute("name", `end-exp${times_pressed}`)
+        end_experience.setAttribute("name", "end-exp")
 
 
         // append new elements into experience section
@@ -87,8 +90,8 @@ addBtn.addEventListener('click', () => {
         exp_section.appendChild(start_experience)
         exp_section.appendChild(label_end_exp)
         exp_section.appendChild(end_experience)
-        exp_section.appendChild(exp_counter)
-        // exp_section.appendChild(new_div)
+
+        count_extra_exp++
 
     }
     else {
@@ -97,27 +100,29 @@ addBtn.addEventListener('click', () => {
 
 })
 
-// select experience div and 'add new' button
+// todo: dynamic education form
+
+// select eduacation div and 'add new' button
 const edu_section = document.getElementById("accordion-body-edu")
 const addBtnEdu = document.getElementById("add-edu")
 
-// todo: dynamic education form template
-
 // number of education section
-count_edu = 0
+let count_extra_edu = 0
+
+// ! removable
+// exp counter
+// let edu_counter = document.createElement("input")
+// edu_counter.setAttribute("value", `${count_extra_edu + 1}`)
+// edu_counter.setAttribute("style", "display: none;")
+// edu_counter.setAttribute("name", "edu-counter")
+// edu_section.appendChild(edu_counter)
 
 addBtnEdu.addEventListener('click', () => {
 
     // max 4 extra exp allowed
-    if (count_edu < 4) {
+    if (count_extra_edu < 4) {
 
-        count_edu++
 
-        // exp counter
-        let edu_counter = document.createElement("input")
-        edu_counter.setAttribute("value", `${count_edu + 1}`)
-        edu_counter.setAttribute("style", "display: none;")
-        edu_counter.setAttribute("name", "edu-counter")
 
         // hr between each edu
         let hr = document.createElement("hr")
@@ -131,7 +136,7 @@ addBtnEdu.addEventListener('click', () => {
         let school = document.createElement("input")
         school.setAttribute("class", "form-control my-2 w-auto")
         school.setAttribute("type", "text")
-        school.setAttribute("name", `school${count_edu}`)
+        school.setAttribute("name", "school")
         // DEGREE
         // label el for degree
         let label_degree = document.createElement("label")
@@ -141,7 +146,7 @@ addBtnEdu.addEventListener('click', () => {
         let degree = document.createElement("input")
         degree.setAttribute("class", "form-control my-2 w-auto")
         degree.setAttribute("type", "text")
-        degree.setAttribute("name", `degree${count_edu}`)
+        degree.setAttribute("name", "degree")
         // STUDY FIELD
         // label el for job-address
         let label_field = document.createElement("label")
@@ -151,7 +156,7 @@ addBtnEdu.addEventListener('click', () => {
         let study_field = document.createElement("input")
         study_field.setAttribute("class", "form-control my-2 w-auto")
         study_field.setAttribute("type", "text")
-        study_field.setAttribute("name", `study-field${count_edu}`)
+        study_field.setAttribute("name", "study-field")
         // EXP START DATE
         // label for exp start date
         let label_start_edu = document.createElement("label")
@@ -161,7 +166,7 @@ addBtnEdu.addEventListener('click', () => {
         let start_education = document.createElement("input")
         start_education.setAttribute("class", "form-control my-2 w-auto")
         start_education.setAttribute("type", "month")
-        start_education.setAttribute("name", `start-edu${count_edu}`)
+        start_education.setAttribute("name", "start-edu")
         // EXP END DATE
         // label for exp end date
         let label_end_edu = document.createElement("label")
@@ -171,7 +176,7 @@ addBtnEdu.addEventListener('click', () => {
         let end_education = document.createElement("input")
         end_education.setAttribute("class", "form-control my-2 w-auto")
         end_education.setAttribute("type", "month")
-        end_education.setAttribute("name", `end-edu${count_edu}`)
+        end_education.setAttribute("name", "end-edu")
 
 
         // append new elements into experience section
@@ -186,11 +191,52 @@ addBtnEdu.addEventListener('click', () => {
         edu_section.appendChild(start_education)
         edu_section.appendChild(label_end_edu)
         edu_section.appendChild(end_education)
-        edu_section.appendChild(edu_counter)
+
+        count_extra_edu++
 
     }
     else {
         window.alert("Max. number of educations: 5")
+    }
+
+})
+
+
+// todo: dynamic skills section
+
+// skills div and add button therein
+const skill_section = document.getElementById("accordion-body-skills")
+const addBtnSkill = document.getElementById("add-skill")
+
+// extra number of skills
+let count_extra_skills = 0
+
+// add new skill input with click of a button
+addBtnSkill.addEventListener('click', () => {
+
+    if (count_extra_skills < 15) {
+
+        // SKILLS
+        // label element for skill
+        let label_skill = document.createElement("label")
+        label_skill.innerHTML = "Skill"
+        label_skill.setAttribute("class", "text-secondary")
+
+        // input element for skill
+        let skill = document.createElement("input")
+        skill.setAttribute("class", "form-control my-2 w-auto")
+        skill.setAttribute("type", "text")
+        skill.setAttribute("name", "skill")
+
+        // append new elements into skills section
+        skill_section.appendChild(label_skill)
+        skill_section.appendChild(skill)
+
+        count_extra_skills++
+
+    }
+    else {
+        window.alert("Max. number of skills: 16")
     }
 
 })
