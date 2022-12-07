@@ -1,5 +1,5 @@
 # CV-Generator 📜
-## A web-based application allows users to create a CV in pdf format.
+## A web-based application allows users to create a CV(*Curriculum Vitae*)/Resumé in pdf format.
 ### Final Project - Harvard CS50P: Introduction to Programming with Python
 #### Watch demo: [YouTube](https://youtu.be)
 
