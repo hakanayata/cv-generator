@@ -5,7 +5,7 @@
 
 ## Description: Web-based app built with Python (Flask), JavaScript and Bootstrap.
 
-This web application was made as a [final project](https://cs50.harvard.edu/python/2022/project/) for [Harvard's Introduction to Programming](https://www.edx.org/course/cs50s-introduction-to-programming-with-python) course. My goal was to build a full fledged web application, combining what I've learned from both [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x) and CS50P(https://www.edx.org/course/cs50s-introduction-to-programming-with-python) courses.
+This web application was made as a [final project](https://cs50.harvard.edu/python/2022/project/) for [Harvard's Introduction to Programming](https://www.edx.org/course/cs50s-introduction-to-programming-with-python) course. The goal was to build a full fledged web application, combining the knowledge obtained from both [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x) and [CS50P](https://www.edx.org/course/cs50s-introduction-to-programming-with-python) courses.
 
 CV-Generator helps users to create a pdf of a CV (*Curriculum Vitae*) after filling out a single page form.
 
