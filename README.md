@@ -33,7 +33,7 @@ CV-Generator helps users to create a pdf of a CV (*Curriculum Vitae*) after fill
 
 #### Feedback
 You might be able to test this application at: [Link](www.heroku.com)
-I would appreciate any kind of feedback. (See ***Contact*** below)
+I would appreciate any kind of feedback. (See [***Contact***](https://github.com/hakanayata/cv-generator#contact) below)
 
 ## Contact
 I'm [Hakan](https://hakanayata.com). You could reach me at ayata.s.hakan@gmail.com
