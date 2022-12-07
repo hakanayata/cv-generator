@@ -24,7 +24,7 @@
         </div>
         {% endif %}
         <!-- Accordion -->
-        <form action="/" autocomplete="off" method="POST" enctype="multipart/form-data">
+        <form action="/" method="POST" enctype="multipart/form-data">
             <div class="accordion w-auto mx-auto" id="accordionExample">
                 <!-- Personal Info -->
                 <div class="accordion-item">
@@ -107,18 +107,19 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body" id="accordion-body-exp">
                             <label class="text-secondary">Job Title</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="job-title0">
+                            <input class="form-control mb-2 w-auto" type="text" name="job-title">
                             <label class="text-secondary">Company</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="company0">
+                            <input class="form-control mb-2 w-auto" type="text" name="company">
                             <label class="text-secondary">City, State, Country</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="job-address0">
+                            <input class="form-control mb-2 w-auto" type="text" name="job-address">
                             <label class="text-secondary">Start date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="start-exp0">
+                            <input class="form-control mb-2 w-auto" type="month" name="start-exp">
                             <label class="text-secondary">End date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="end-exp0">
+                            <input class="form-control mb-2 w-auto" type="month" name="end-exp">
                         </div>
                         <div class="accordion-body">
-                            <button class="btn btn-success mb-2 mt-1 px-5 w-auto" id="add-exp">Add New</button>
+                            <button class="btn btn-success mb-2 mt-1 px-5 w-auto" type="button" id="add-exp">Add
+                                New</button>
                         </div>
                     </div>
                 </div>
@@ -134,18 +135,19 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body" id="accordion-body-edu">
                             <label class="text-secondary">School</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="school0">
+                            <input class="form-control mb-2 w-auto" type="text" name="school">
                             <label class="text-secondary">Degree</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="degree0">
+                            <input class="form-control mb-2 w-auto" type="text" name="degree">
                             <label class="text-secondary">Field of study</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="study-field0">
+                            <input class="form-control mb-2 w-auto" type="text" name="study-field">
                             <label class="text-secondary">Start date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="start-edu0">
+                            <input class="form-control mb-2 w-auto" type="month" name="start-edu">
                             <label class="text-secondary">End date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="end-edu0">
+                            <input class="form-control mb-2 w-auto" type="month" name="end-edu">
                         </div>
                         <div class="accordion-body">
-                            <button class="btn btn-success mb-2 mt-1 px-5 w-auto" id="add-edu">Add New</button>
+                            <button class="btn btn-success mb-2 mt-1 px-5 w-auto" type="button" id="add-edu">Add
+                                New</button>
                         </div>
                     </div>
                 </div>
@@ -159,18 +161,13 @@
                     </h2>
                     <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body" id="accordion-body-skills">
+                            <label class="text-secondary">Skill</label>
+                            <input class="form-control my-2 w-auto" type="text" name="skill">
+                        </div>
                         <div class="accordion-body">
-                            <label class="text-secondary">Skills</label>
-                            <textarea class="form-control mb-2 w-auto" cols="30" name="skills"
-                                placeholder="split skills with comma ','" rows="5" required></textarea>
-                            <!-- <label class="text-secondary">Skill 2</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="skill2">
-                            <label class="text-secondary">Skill 3</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="skill3">
-                            <label class="text-secondary">Skill 4</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="skill4">
-                            <label class="text-secondary">Skill 5</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="skill5"> -->
+                            <button class="btn btn-success mb-2 mt-1 px-5 w-auto" type="button" id="add-skill">Add
+                                New</button>
                         </div>
                     </div>
                 </div>
