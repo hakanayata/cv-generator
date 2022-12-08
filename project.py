@@ -46,9 +46,13 @@ def after_request(response):
 @app.route("/", methods=["GET", "POST"])
 def main():
 
+    # if user reaches the page via GET, as by clicking a link or redirect()
+    # GET carries req parameter appended in URL string
     if request.method == "GET":
         return render_template("index.html")
 
+    # if user reaches the page via POST
+    # POST carries request param. in message body
     elif request.method == "POST":
 
         # PERSONAL INFORMATION
@@ -180,6 +184,8 @@ def main():
                  fill=True, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
+        # iterating over any of the list returned from get_education() function
+        # because all of them have the same length
         for i in range(len(schools)):
             # ! school
             pdf.set_font("Helvetica", "B", size=12)
