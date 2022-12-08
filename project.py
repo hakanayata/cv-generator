@@ -10,7 +10,9 @@ from email_validator import validate_email, EmailNotValidError
 
 # todo: validations
 # todo: test: add 2 extra exp/edu but leave 1 without filling
-# todo: sort by dates in EXP and EDU sections
+# todo: README.md
+# todo: video
+# this comment was written to test github percentage system. Let's see if this makes any difference
 
 # configure application
 app = Flask(__name__)

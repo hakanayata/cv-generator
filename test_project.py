@@ -1,4 +1,4 @@
-from project import date_formatter, get_duration
+from project import date_formatter, get_duration, allowed_file
 import pytest
 
 
@@ -9,7 +9,7 @@ def test_date_formatter():
         date_formatter("")
 
 
-def test_experience_calculator():
+def test_duration():
     assert get_duration("2020-10", "2020-10") == "1 month"
     assert get_duration("2020-10", "2020-12") == "3 months"
     assert get_duration("2018-01", "2020-12") == "3 years"
@@ -27,5 +27,5 @@ def test_experience_calculator():
         get_duration("2020-10", 2020)
 
 
-def test_function_n():
-    ...
+def test_allowed_file():
+    assert allowed_file("file.png") == True
