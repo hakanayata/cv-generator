@@ -5,3 +5,7 @@
 a {
     text-decoration: none !important;
 }
+
+input[type="file"] {
+    width: 240px !important;
+}
