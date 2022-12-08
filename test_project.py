@@ -28,4 +28,7 @@ def test_duration():
 
 
 def test_allowed_file():
+    assert allowed_file("file.jpg") == True
     assert allowed_file("file.png") == True
+    assert allowed_file("file.py") == False
+    assert allowed_file("file.hevc") == False
