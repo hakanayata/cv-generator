@@ -6,13 +6,9 @@ from PIL import Image
 import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-from email_validator import validate_email, EmailNotValidError
 
-# todo: validations
-# todo: test: add 2 extra exp/edu but leave 1 without filling
 # todo: README.md
 # todo: video
-# this comment was written to test github percentage system. Let's see if this makes any difference
 
 # configure application
 app = Flask(__name__)
@@ -69,7 +65,11 @@ def main():
             return redirect("/")
 
         # TARGET JOB TITLE
-        target_job_title = get_target_job_title()
+        try:
+            target_job_title = get_target_job_title()
+        except:
+            flash('Missing "Target Job Title" field!')
+            return redirect("/")
 
         # EXPERIENCE
         try:
@@ -89,7 +89,11 @@ def main():
         career_objective = get_objective()
 
         # SKILLS
-        skills = get_skills()
+        try:
+            skills = get_skills()
+        except:
+            flash('Missing "Skills" field!')
+            return redirect("/")
 
         # create an instance of FPDF class
         pdf = FPDF(orientation="P", unit="mm", format="A4")
@@ -139,14 +143,14 @@ def main():
         pdf.ln(4)
 
         # ? CAREER OBJECTIVE
-        pdf.set_font("Helvetica", "", size=12)
-        pdf.set_fill_color(240, 240, 240)
-        pdf.set_text_color(20, 20, 20)
-        pdf.multi_cell(w=190, h=8, txt=f"{career_objective}", border=1, fill=True,
-                       align="L", new_x="LMARGIN", new_y="NEXT")
-
-        # line break
-        pdf.ln(4)
+        if career_objective:
+            pdf.set_font("Helvetica", "", size=12)
+            pdf.set_fill_color(240, 240, 240)
+            pdf.set_text_color(20, 20, 20)
+            pdf.multi_cell(w=190, h=8, txt=f"{career_objective}", border=1, fill=True,
+                           align="L", new_x="LMARGIN", new_y="NEXT")
+            # line break
+            pdf.ln(4)
 
         # ? EXPERIENCE
         # ! title
@@ -213,11 +217,11 @@ def main():
                  fill=True, new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
-        for i in range(len(skills)):
-            pdf.set_font("Helvetica", "", size=12)
-            pdf.set_text_color(20, 20, 70)
-            pdf.cell(w=190, h=8, txt=f"- {skills[i]}",
-                     align="L", new_x="LMARGIN", new_y="NEXT")
+        # skill | skill | skill
+        pdf.set_font("Helvetica", "", size=12)
+        pdf.set_text_color(20, 20, 70)
+        pdf.multi_cell(w=190, h=8, txt=f"{skill_formatter(skills)}",
+                       align="L", new_x="LMARGIN", new_y="NEXT")
 
         # ? END
         # title of pdf
@@ -302,6 +306,12 @@ def get_personal_info():
 # ? https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
 
 
+def date_formatter(s):
+    """Converts YYYY-MM into MM.YYYY"""
+    year, month = s.split("-")
+    return f"{int(month):02}.{year}"
+
+
 def get_picture():
     """Returns name of img file"""
     file = request.files["picture"]
@@ -315,15 +325,11 @@ def get_picture():
         return redirect("/")
 
 
-# ? -------- SKILLS ------------
-
 def get_skills():
     """Returns multiple inputs from skills section"""
     skills = request.form.getlist("skill")
 
     return skills
-
-# ? -------- SKILLS ------------
 
 
 def get_target_job_title():
@@ -338,12 +344,6 @@ def get_objective():
     # CAREER OBJECTIVE
     objective = request.form.get("objective").strip().capitalize()
     return objective
-
-
-def date_formatter(s):
-    """Converts YYYY-MM into MM.YYYY"""
-    year, month = s.split("-")
-    return f"{int(month):02}.{year}"
 
 
 def get_duration(date1, date2):
@@ -375,6 +375,20 @@ def get_duration(date1, date2):
                 diff_in_months = 0
 
             return f"{diff_in_years} {'years' if diff_in_years > 1 else 'year'}{', ' if diff_in_months > 0 else ''}{diff_in_months if diff_in_months > 0 else ''}{' ' if diff_in_months > 0 else ''}{'month' if diff_in_months == 1 else ''}{'months' if diff_in_months > 1 else ''}"
+
+
+def skill_formatter(ls):
+    skills_str = ''
+
+    if len(ls) == 1:
+        return ls[0]
+    else:
+        for i in range(len(ls)-1):
+            skills_str += ls[i].strip() + ' | '
+
+        skills_str += ls[-1].strip()
+
+        return skills_str
 
 
 if __name__ == "__main__":
