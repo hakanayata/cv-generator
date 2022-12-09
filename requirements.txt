@@ -1,3 +1,6 @@
 Flask
-FPDF
+Flask-Session
+fpdf2
 pytest
+requests
+Pillow
