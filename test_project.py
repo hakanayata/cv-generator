@@ -1,5 +1,12 @@
-from project import date_formatter, get_duration, allowed_file
+from project import date_formatter, get_duration, allowed_file, skill_formatter
 import pytest
+
+
+def test_allowed_file():
+    assert allowed_file("file.jpg") == True
+    assert allowed_file("file.png") == True
+    assert allowed_file("file.py") == False
+    assert allowed_file("file.hevc") == False
 
 
 def test_date_formatter():
@@ -9,7 +16,7 @@ def test_date_formatter():
         date_formatter("")
 
 
-def test_duration():
+def test_get_duration():
     assert get_duration("2020-10", "2020-10") == "1 month"
     assert get_duration("2020-10", "2020-12") == "3 months"
     assert get_duration("2018-01", "2020-12") == "3 years"
@@ -27,8 +34,8 @@ def test_duration():
         get_duration("2020-10", 2020)
 
 
-def test_allowed_file():
-    assert allowed_file("file.jpg") == True
-    assert allowed_file("file.png") == True
-    assert allowed_file("file.py") == False
-    assert allowed_file("file.hevc") == False
+def test_skill_formatter():
+    assert skill_formatter(['a']) == 'a'
+    assert skill_formatter(['a', 'b', 'c']) == 'a | b | c'
+    assert skill_formatter(['a', 'b ', ' c']) == 'a | b | c'
+    assert skill_formatter([' HTML ', '10 ', ' C']) == 'HTML | 10 | C'
