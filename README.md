@@ -14,7 +14,7 @@ CV-Generator helps users to create a portable document format (pdf) of a CV (*Cu
 - **Target Job Title** section
 - **Experience** section where users type their vocational experiences.
 - **Education** section
-- **Skills** section where users type their skills which make them stand out in job market.
+- **Skills** section where users type their skills which make them stand out in the job market.
 - **Functions** for formatting data:
   - `get_duration()` is a function which takes two dates as arguments and calculates the duration between two dates and returns that duration in years and months.
   - `date_formatter()` is a function which takes a date as an argument in 'YYYY-MM' format and returns a string type of the date in 'MM.YYYY' format.
