@@ -23,11 +23,11 @@ CV-Generator helps users to create a portable document format (pdf) of a CV (*Cu
 ## Languages & Tools
 
 - Python 3.11
+  - [fpdf2](https://pypi.org/project/fpdf2/): library for PDF creation
+  - [Pillow](https://pypi.org/project/Pillow/): library for image processing
+  - [pytest](https://pypi.org/project/pytest/): framework for unit tests
 - Flask 2.2
 - Jinja 3.1
-- [fpdf2](https://pypi.org/project/fpdf2/): library for PDF creation
-- [Pillow](https://pypi.org/project/Pillow/): library for image processing
-- [pytest](https://pypi.org/project/pytest/): framework for unit tests
 - HTML
 - CSS
 - Bootstrap
