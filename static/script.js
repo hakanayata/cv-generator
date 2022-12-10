@@ -272,16 +272,10 @@ const delBtnSkill = document.getElementById("delete-skill")
 // extra number of skills
 let count_extra_skills = 0
 
-function activateDeactivateBtnSkill() {
-    if (count_extra_skills < 1) {
-        delBtnSkill.disabled = true
-    }
-    else {
-        delBtnSkill.disabled = false
-    }
-}
+// initial id number for divs of new skills
+let idNo = 0
+let idNoList = []
 
-activateDeactivateBtnSkill()
 // add new skill input with click of a button
 addBtnSkill.addEventListener('click', () => {
 
@@ -289,27 +283,50 @@ addBtnSkill.addEventListener('click', () => {
         // SKILLS
         // encapsulate newly created elements in a div
         let skill_div = document.createElement("div")
-        skill_div.setAttribute("id", "new-skill")
+
+        // if id already exist in the list, new id should be the max val in array plus one
+        for (let i = 0; i < idNoList.length; i++) {
+            if (idNo === idNoList[i]) {
+                idNo = Math.max(...idNoList) + 1
+            }
+            else {
+                idNo = idNo
+            }
+        }
+
+        skill_div.setAttribute("id", `new-skill-${idNo}`)
+        idNoList.push(idNo)
 
         // label element for skill
         let label_skill = document.createElement("label")
         label_skill.innerHTML = "Skill"
         label_skill.setAttribute("class", "text-secondary")
+        label_skill.setAttribute("style", "display: block;")
 
         // input element for skill
         let skill = document.createElement("input")
         skill.setAttribute("class", "form-control my-2 w-auto")
+        skill.setAttribute("style", "display:inline-block;")
         skill.setAttribute("type", "text")
         skill.setAttribute("name", "skill")
+
+        // delete button
+        let delButton = document.createElement("button")
+        delButton.setAttribute("class", "btn btn-sm fs-3 fw-bolder mx-2 text-danger w-auto")
+        delButton.setAttribute("type", "button")
+        delButton.setAttribute("id", `${idNo}`)
+        delButton.setAttribute("onclick", "delExtraSkill(this.id)")
+        delButton.innerHTML = "⛌"
 
         // append new elements into skills section
         skill_div.appendChild(label_skill)
         skill_div.appendChild(skill)
+        skill_div.appendChild(delButton)
         skill_section.appendChild(skill_div)
 
         count_extra_skills++
-
-        activateDeactivateBtnSkill()
+        // idNo++
+        console.log(idNoList)
 
     }
     else {
@@ -319,15 +336,16 @@ addBtnSkill.addEventListener('click', () => {
 })
 
 
-delBtnSkill.addEventListener('click', () => {
+function delExtraSkill(id) {
 
-    if (count_extra_skills >= 1) {
+    el = document.getElementById(`new-skill-${id}`)
+    el.remove()
 
-        el = document.getElementById("new-skill")
-        el.remove()
+    // remove the id from ids list
+    idNoList = idNoList.filter(item => item != id)
 
-        count_extra_skills--
-        activateDeactivateBtnSkill()
-    }
+    count_extra_skills--
 
-})
+    console.log(idNoList)
+
+}
