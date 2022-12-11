@@ -297,6 +297,13 @@ def get_personal_info():
     email = request.form.get("email")
     return (first_name, last_name, address, phone_number, email)
 
+
+def date_formatter(s):
+    """Converts YYYY-MM into MM.YYYY"""
+    year, month = s.split("-")
+    return f"{int(month):02}.{year}"
+
+
 # ! check if allowed_file() and get_picture() works
 # ! when there's no picture or different format uploaded
 
@@ -304,12 +311,6 @@ def get_personal_info():
 # ? https://stackoverflow.com/questions/20015550/read-file-data-without-saving-it-in-flask
 # ? https://werkzeug.palletsprojects.com/en/2.2.x/datastructures/#werkzeug.datastructures.FileStorage
 # ? https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
-
-
-def date_formatter(s):
-    """Converts YYYY-MM into MM.YYYY"""
-    year, month = s.split("-")
-    return f"{int(month):02}.{year}"
 
 
 def get_picture():
