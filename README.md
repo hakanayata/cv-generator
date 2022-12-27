@@ -1,9 +1,9 @@
 # CV-Generator 📜
-## A web-based application allows users to create a CV(*Curriculum Vitae*)/Resumé in portable document format (pdf).
+## A web-based application that allows users to create a CV(*Curriculum Vitae*)/Resumé in portable document format (pdf).
 ### Final Project - Harvard CS50P: Introduction to Programming with Python
-#### Watch demo: [YouTube](https://youtu.be)
+#### Watch demo: [YouTube](https://youtu.be/YVBA1FetrXQ)
 
-## Description: Web-based app built with Python (Flask), JavaScript and Bootstrap.
+## Description: Web-based app built with Python (Flask), Jinja Templates, JavaScript and Bootstrap.
 
 This web application was made as a [final project](https://cs50.harvard.edu/python/2022/project/) for [Harvard's Introduction to Programming](https://www.edx.org/course/cs50s-introduction-to-programming-with-python) course. The goal was to build a full fledged web application, combining the knowledge obtained from both [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x) and [CS50P](https://www.edx.org/course/cs50s-introduction-to-programming-with-python) courses.
 
@@ -15,7 +15,7 @@ CV-Generator helps users to create a portable document format (pdf) of a CV (*Cu
 - **Experience** section where users type their vocational experiences.
 - **Education** section
 - **Skills** section where users type their skills which make them stand out in the job market.
-- **Functions** for formatting data:
+- **Functions** for formatting data which were also included in unit test:
   - `get_duration()` is a function which takes two dates as arguments and calculates the duration between two dates and returns that duration in years and months.
   - `date_formatter()` is a function which takes a date as an argument in 'YYYY-MM' format and returns a string type of the date in 'MM.YYYY' format.
   - `skill_formatter()` is a function which takes an array of strings of skills as an argument and returns just a single string with pipe '|' added between each skills. 

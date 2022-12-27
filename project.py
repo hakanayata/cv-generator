@@ -42,13 +42,13 @@ def after_request(response):
 @app.route("/", methods=["GET", "POST"])
 def main():
 
-    # if user reaches the page via GET, as by clicking a link or redirect()
-    # GET carries req parameter appended in URL string
+    # * if user reaches the page via GET, as by clicking a link or redirect()
+    # * GET carries req parameter appended in URL string
     if request.method == "GET":
         return render_template("index.html")
 
-    # if user reaches the page via POST
-    # POST carries request param. in message body
+    # * if user reaches the page via POST
+    # * POST carries request param. in message body
     elif request.method == "POST":
 
         # PERSONAL INFORMATION
@@ -292,7 +292,7 @@ def get_personal_info():
     # PERSONAL INFORMATION
     first_name = request.form.get("firstname").strip().upper()
     last_name = request.form.get("lastname").strip().upper()
-    address = request.form.get("address").strip().capitalize()
+    address = request.form.get("address").strip()
     phone_number = request.form.get("phonenumber").strip()
     email = request.form.get("email")
     return (first_name, last_name, address, phone_number, email)
@@ -336,14 +336,14 @@ def get_skills():
 def get_target_job_title():
     """Returns target job title"""
     # TARGET JOB TITLE
-    target_job_title = request.form.get("target-job-title").strip().upper()
+    target_job_title = request.form.get("target-job-title").strip()
     return target_job_title
 
 
 def get_objective():
     """Returns career objective"""
     # CAREER OBJECTIVE
-    objective = request.form.get("objective").strip().capitalize()
+    objective = request.form.get("objective").strip()
     return objective
 
 
