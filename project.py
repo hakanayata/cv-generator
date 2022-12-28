@@ -10,7 +10,10 @@ from werkzeug.datastructures import FileStorage
 # configure application
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static'
+# ! for local
+# UPLOAD_FOLDER = 'static'
+# ! for PythonAnywhere /home/<username>/<project name>/static
+UPLOAD_FOLDER = '/home/cvgenerator/cv-generator/static'
 ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 
 # ensure templates are auto-reloaded
