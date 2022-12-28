@@ -2,6 +2,7 @@
 ## A web-based application that allows users to create a CV(*Curriculum Vitae*)/Resumé in portable document format (pdf).
 ### Final Project - Harvard CS50P: Introduction to Programming with Python
 #### Watch demo: [YouTube](https://youtu.be/YVBA1FetrXQ)
+#### App link: http://crocus.eu.pythonanywhere.com/
 
 ## Description: Web-based app built with Python (Flask), Jinja Templates, JavaScript and Bootstrap.
 

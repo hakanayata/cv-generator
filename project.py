@@ -7,9 +7,6 @@ import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 
-# todo: README.md
-# todo: video
-
 # configure application
 app = Flask(__name__)
 
@@ -107,14 +104,14 @@ def main():
         pdf.cell(w=190, h=44,
                  align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
         # get image size with PILLOW
-        img = Image.open(f"static/{picture_name}")
+        img = Image.open(f"{UPLOAD_FOLDER}/{picture_name}")
         width, height = img.size
         # calculate the constant, that convert the picture to have a desired height of 40 mm
         constant = height / 40
         # calculate the width with that constant
         width = width / constant
         # set image horizontally in the middle
-        pdf.image(f"static/{picture_name}", x=(210/2) - width/2, y=14,
+        pdf.image(f"{UPLOAD_FOLDER}/{picture_name}", x=(210/2) - width/2, y=14,
                   h=40, alt_text="profile picture")
         # pdf.round_clip(x=10, y=10, r=50)
 
@@ -223,6 +220,9 @@ def main():
         pdf.multi_cell(w=190, h=8, txt=f"{skill_formatter(skills)}",
                        align="L", new_x="LMARGIN", new_y="NEXT")
 
+        # ? DELETE UPLOADED IMAGE FILE
+        os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+
         # ? END
         # title of pdf
         pdf.set_title(f"{last_name}-CV")
@@ -314,7 +314,7 @@ def date_formatter(s):
 
 
 def get_picture():
-    """Returns name of img file"""
+    """Saves and image and returns the name of img file"""
     file = request.files["picture"]
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
