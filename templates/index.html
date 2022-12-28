@@ -65,7 +65,7 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <input class="form-control my-2 w-auto" list="target-options" type="text"
-                                name="target-job-title" placeholder="Software Developer">
+                                name="target-job-title" placeholder="Software Developer" required>
                             <datalist id="target-options">
                                 <option value="Software Developer">
                                 <option value="Web Developer">
@@ -107,15 +107,17 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body" id="accordion-body-exp">
                             <label class="text-secondary">Job Title</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="job-title">
+                            <input class="form-control mb-2 w-auto" type="text" name="job-title" required>
                             <label class="text-secondary">Company</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="company">
+                            <input class="form-control mb-2 w-auto" type="text" name="company" required>
                             <label class="text-secondary">City, State, Country</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="job-address">
+                            <input class="form-control mb-2 w-auto" type="text" name="job-address" required>
                             <label class="text-secondary">Start date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="start-exp">
+                            <input class="form-control mb-2 w-auto" type="month" name="start-exp" min="1992-01"
+                                max="2040-12" required>
                             <label class="text-secondary">End date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="end-exp">
+                            <input class="form-control mb-2 w-auto" type="month" name="end-exp" min="1992-07"
+                                max="2040-12" required>
                         </div>
                         <div class="accordion-body">
                             <button class="btn btn-lg btn-outline-success mb-2 mt-1 px-4 w-auto" type="button"
@@ -137,15 +139,17 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body" id="accordion-body-edu">
                             <label class="text-secondary">School</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="school">
+                            <input class="form-control mb-2 w-auto" type="text" name="school" required>
                             <label class="text-secondary">Degree</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="degree">
+                            <input class="form-control mb-2 w-auto" type="text" name="degree" required>
                             <label class="text-secondary">Field of study</label>
-                            <input class="form-control mb-2 w-auto" type="text" name="study-field">
+                            <input class="form-control mb-2 w-auto" type="text" name="study-field" required>
                             <label class="text-secondary">Start date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="start-edu">
+                            <input class="form-control mb-2 w-auto" type="month" name="start-edu" min="1992-07"
+                                max="2040-12" required>
                             <label class="text-secondary">End date</label>
-                            <input class="form-control mb-2 w-auto" type="month" name="end-edu">
+                            <input class="form-control mb-2 w-auto" type="month" name="end-edu" min="1992-07"
+                                max="2040-12" required>
                         </div>
                         <div class="accordion-body">
                             <button class="btn btn-lg btn-outline-success mb-2 mt-1 px-4 w-auto" type="button"
@@ -167,7 +171,7 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body" id="accordion-body-skills">
                             <label class="text-secondary">Skill</label>
-                            <input class="form-control my-2 w-auto" type="text" name="skill">
+                            <input class="form-control my-2 w-auto" type="text" name="skill" required>
                         </div>
                         <div class="accordion-body">
                             <button class="btn btn-outline-success mb-2 mt-1 px-5 w-auto" type="button"
