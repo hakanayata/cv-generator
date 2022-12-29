@@ -9,3 +9,9 @@ a {
 input[type="file"] {
     width: 240px !important;
 }
+
+@media (max-width: 768) {
+    .w-md-100 {
+        width: 100% !important;
+    }
+}
