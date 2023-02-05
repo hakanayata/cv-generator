@@ -5,7 +5,6 @@ from datetime import date, datetime
 from PIL import Image
 import os
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
 
 # configure application
 app = Flask(__name__)
@@ -20,8 +19,8 @@ ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 # upload folder
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-# set max limit for file upload (rather allowed payload) to 5MB
-app.config["MAX_CONTENT_LENGTH"] = 5 * 1000 * 1000
+# set max limit for file upload (rather allowed payload) to 10MB
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1000 * 1000
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -97,11 +96,14 @@ def main():
 
         # create an instance of FPDF class
         pdf = FPDF(orientation="P", unit="mm", format="A4")
+        # Built-in "Helvetica" font, fails to render single quote ' on iOS Safari, needed to add another font
+        pdf.add_font(fname="./static/font/DejaVuSans.ttf")
+        pdf.add_font(fname="./static/font/DejaVuSans-Bold.ttf")
         # create an empty page
         pdf.add_page()
         # ? PERSONAL INFORMATION
         # ! Picture
-        pdf.set_font("Helvetica", "B", size=24)
+        pdf.set_font("DejaVuSans-Bold", "", size=24)
         pdf.set_fill_color(20, 20, 70)
         pdf.set_text_color(250, 250, 250)
         pdf.cell(w=190, h=44,
@@ -119,7 +121,7 @@ def main():
         # pdf.round_clip(x=10, y=10, r=50)
 
         # ! Name
-        pdf.set_font("Helvetica", "B", size=24)
+        pdf.set_font("DejaVuSans-Bold", "", size=24)
         pdf.set_fill_color(20, 20, 70)
         pdf.set_text_color(250, 250, 250)
         # page width 210mm but default margin 1cm from left + right
@@ -127,7 +129,7 @@ def main():
             w=190, h=20, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
 
         # ! Contact
-        pdf.set_font("Helvetica", "", size=10)
+        pdf.set_font("DejaVuSans", "", size=10)
         pdf.set_fill_color(120, 20, 70)
         pdf.set_text_color(250, 250, 250)
         pdf.cell(
@@ -136,7 +138,7 @@ def main():
         # line break
         pdf.ln(4)
         # ! Target Job Title
-        pdf.set_font("Helvetica", "B", size=16)
+        pdf.set_font("DejaVuSans-Bold", "", size=16)
         pdf.set_text_color(20, 20, 70)
         pdf.cell(w=190, h=10, txt=f"{target_job_title}", align="C",
                  new_x="LMARGIN", new_y="NEXT")
@@ -144,7 +146,7 @@ def main():
 
         # ? CAREER OBJECTIVE
         if career_objective:
-            pdf.set_font("Helvetica", "", size=12)
+            pdf.set_font("DejaVuSans", "", size=12)
             pdf.set_fill_color(240, 240, 240)
             pdf.set_text_color(20, 20, 20)
             pdf.multi_cell(w=190, h=8, txt=f"{career_objective}", border=1, fill=True,
@@ -154,7 +156,7 @@ def main():
 
         # ? EXPERIENCE
         # ! title
-        pdf.set_font("Helvetica", "B", size=14)
+        pdf.set_font("DejaVuSans-Bold", "", size=14)
         pdf.set_fill_color(10, 10, 50)
         pdf.set_text_color(250, 250, 250)
         pdf.cell(w=190, h=8, txt=f"EXPERIENCE", align="C",
@@ -164,13 +166,13 @@ def main():
         # iterate over experiences list (length is same for each list, job_titles taken in this case)
         for i in range(len(job_titles)):
             # ! job title
-            pdf.set_font("Helvetica", "B", size=12)
+            pdf.set_font("DejaVuSans-Bold", "", size=12)
             pdf.set_fill_color(240, 240, 240)
             pdf.set_text_color(40, 40, 40)
             pdf.cell(w=190, h=6, txt=f"{job_titles[i]}", align="L",
                      fill=True, new_x="LMARGIN", new_y="NEXT")
             # ! company, adress, dates, duration
-            pdf.set_font("Helvetica", "", size=12)
+            pdf.set_font("DejaVuSans", "", size=12)
             pdf.set_text_color(20, 20, 70)
             pdf.cell(w=190, h=6, txt=f"{companies[i]} | {job_addresses[i]}",
                      align="L", new_x="LMARGIN", new_y="NEXT")
@@ -181,7 +183,7 @@ def main():
 
         # ? EDUCATION
         # ! title
-        pdf.set_font("Helvetica", "B", size=14)
+        pdf.set_font("DejaVuSans-Bold", "", size=14)
         pdf.set_fill_color(10, 10, 50)
         pdf.set_text_color(250, 250, 250)
         pdf.cell(w=190, h=8, txt=f"EDUCATION", align="C",
@@ -192,14 +194,14 @@ def main():
         # because all of them have the same length
         for i in range(len(schools)):
             # ! school
-            pdf.set_font("Helvetica", "B", size=12)
+            pdf.set_font("DejaVuSans-Bold", "", size=12)
             pdf.set_fill_color(240, 240, 240)
             pdf.set_text_color(40, 40, 40)
             pdf.cell(w=190, h=6, txt=f"{schools[i]}", align="L",
                      fill=True, new_x="LMARGIN", new_y="NEXT")
 
             # ! degree, field, dates
-            pdf.set_font("Helvetica", "", size=12)
+            pdf.set_font("DejaVuSans", "", size=12)
             pdf.set_text_color(20, 20, 70)
             pdf.cell(w=190, h=6, txt=f"{degrees[i]}, {study_fields[i]}",
                      align="L", new_x="LMARGIN", new_y="NEXT")
@@ -210,7 +212,7 @@ def main():
 
         # ? SKILLS
         # ! title
-        pdf.set_font("Helvetica", "B", size=14)
+        pdf.set_font("DejaVuSans-Bold", "", size=14)
         pdf.set_fill_color(10, 10, 50)
         pdf.set_text_color(250, 250, 250)
         pdf.cell(w=190, h=8, txt=f"SKILLS", align="C",
@@ -218,7 +220,7 @@ def main():
         pdf.ln(4)
 
         # skill | skill | skill
-        pdf.set_font("Helvetica", "", size=12)
+        pdf.set_font("DejaVuSans", "", size=12)
         pdf.set_text_color(20, 20, 70)
         pdf.multi_cell(w=190, h=8, txt=f"{skill_formatter(skills)}",
                        align="L", new_x="LMARGIN", new_y="NEXT")
@@ -309,12 +311,6 @@ def date_formatter(s):
 
 # ! check if allowed_file() and get_picture() works
 # ! when there's no picture or different format uploaded
-
-# ? Try file storage if time suffices
-# ? https://stackoverflow.com/questions/20015550/read-file-data-without-saving-it-in-flask
-# ? https://werkzeug.palletsprojects.com/en/2.2.x/datastructures/#werkzeug.datastructures.FileStorage
-# ? https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
-
 
 def get_picture():
     """Saves and image and returns the name of img file"""
