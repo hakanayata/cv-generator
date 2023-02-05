@@ -98,8 +98,8 @@ def main():
         pdf = FPDF(orientation="P", unit="mm", format="A4")
         # Built-in "Helvetica" font, fails to render single quote ' on iOS Safari, needed to add another font
         # https://pyfpdf.github.io/fpdf2/Unicode.html
-        pdf.add_font(fname="./static/font/DejaVuSans.ttf")
-        pdf.add_font(fname="./static/font/DejaVuSans-Bold.ttf")
+        pdf.add_font(fname=f"{UPLOAD_FOLDER}/font/DejaVuSans.ttf")
+        pdf.add_font(fname=f"{UPLOAD_FOLDER}/font/DejaVuSans-Bold.ttf")
         # create an empty page
         pdf.add_page()
         # ? PERSONAL INFORMATION
@@ -115,16 +115,13 @@ def main():
         # for more: https://github.com/python-pillow/Pillow/issues/4703
         img = ImageOps.exif_transpose(img)
         width, height = img.size
-        print(width, height)
         # calculate the constant, that convert the picture to have a desired height of 40 mm
         # 1 mm 3.779528px
         constant = height / (40 * 3.779528)
-        #
         height = int(height / constant)
         # calculate the width with the constant
         width = int(width / constant)
         img = img.resize((width, height))
-        print(width, height)
         # img = img.rotate(270)
         # set image horizontally in the middle
         pdf.image(img, x=((210 - (width/3.779528)) / 2), y=14,
@@ -271,9 +268,6 @@ def get_education():
     for i in range(len(start_educations)):
         formatted_start_edus.append(date_formatter(start_educations[i]))
         formatted_end_edus.append(date_formatter(end_educations[i]))
-
-    # print(f"{start_educations}")
-    # print(f"{end_educations}")
 
     return schools, degrees, study_fields, formatted_start_edus, formatted_end_edus
 
