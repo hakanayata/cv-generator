@@ -2,7 +2,7 @@
 ## A web-based application that allows users to create a CV(*Curriculum Vitae*)/Resumé in portable document format (pdf).
 ### Final Project - Harvard CS50P: Introduction to Programming with Python
 #### Watch demo: [YouTube](https://youtu.be/YVBA1FetrXQ)
-#### App link: http://cvgenerator.eu.pythonanywhere.com/
+#### App link: [Python Anywhere](https://cvgenerator.eu.pythonanywhere.com/)
 
 ## Description: Web-based app built with Python (Flask), Jinja Templates, JavaScript and Bootstrap.
 
@@ -13,8 +13,8 @@ CV-Generator helps users to create a portable document format (pdf) of a CV (*Cu
 ## Features
 - **Personal Information** section where users type their name, address, upload their picture, etc.
 - **Target Job Title** section
-- **Experience** section where users type their vocational experiences.
-- **Education** section
+- **Experience** section where users enter up to five vocational experiences.
+- **Education** section allows user to add up to five different educational fields on their CV.
 - **Skills** section where users type their skills which make them stand out in the job market.
 - **Functions** for formatting data which were also included in unit test:
   - `get_duration()` is a function which takes two dates as arguments and calculates the duration between two dates and returns that duration in years and months.
@@ -43,11 +43,11 @@ CV-Generator helps users to create a portable document format (pdf) of a CV (*Cu
 
 
 #### Feedback
-You might be able to test this application at: [Link](www.heroku.com)
+You might be able to test this application at: [Python Anywhere](https://cvgenerator.eu.pythonanywhere.com/)
 I would appreciate any kind of feedback. (See [***Contact***](https://github.com/hakanayata/cv-generator#contact) below)
 
 ## Contact
-I'm [Hakan](https://hakanayata.com). You could reach me at ayata.s.hakan@gmail.com
+I'm [Hakan](https://hakanayata.com). You could reach me at info@hakanayata.com
 
 
 ```python
