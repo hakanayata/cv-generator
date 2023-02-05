@@ -2,7 +2,7 @@ from flask import Flask, redirect, render_template, request, make_response, flas
 from flask_session import Session
 from fpdf import FPDF
 from datetime import date, datetime
-from PIL import Image
+from PIL import Image, ImageOps
 import os
 from werkzeug.utils import secure_filename
 
@@ -97,6 +97,7 @@ def main():
         # create an instance of FPDF class
         pdf = FPDF(orientation="P", unit="mm", format="A4")
         # Built-in "Helvetica" font, fails to render single quote ' on iOS Safari, needed to add another font
+        # https://pyfpdf.github.io/fpdf2/Unicode.html
         pdf.add_font(fname="./static/font/DejaVuSans.ttf")
         pdf.add_font(fname="./static/font/DejaVuSans-Bold.ttf")
         # create an empty page
@@ -110,13 +111,23 @@ def main():
                  align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
         # get image size with PILLOW
         img = Image.open(f"{UPLOAD_FOLDER}/{picture_name}")
+        # the line below solved the issue where portrait photos would be auto-rotated 90 deg
+        # for more: https://github.com/python-pillow/Pillow/issues/4703
+        img = ImageOps.exif_transpose(img)
         width, height = img.size
+        print(width, height)
         # calculate the constant, that convert the picture to have a desired height of 40 mm
-        constant = height / 40
-        # calculate the width with that constant
-        width = width / constant
+        # 1 mm 3.779528px
+        constant = height / (40 * 3.779528)
+        #
+        height = int(height / constant)
+        # calculate the width with the constant
+        width = int(width / constant)
+        img = img.resize((width, height))
+        print(width, height)
+        # img = img.rotate(270)
         # set image horizontally in the middle
-        pdf.image(f"{UPLOAD_FOLDER}/{picture_name}", x=(210/2) - width/2, y=14,
+        pdf.image(img, x=((210 - (width/3.779528)) / 2), y=14,
                   h=40, alt_text="profile picture")
         # pdf.round_clip(x=10, y=10, r=50)
 
@@ -261,8 +272,8 @@ def get_education():
         formatted_start_edus.append(date_formatter(start_educations[i]))
         formatted_end_edus.append(date_formatter(end_educations[i]))
 
-    print(f"{start_educations}")
-    print(f"{end_educations}")
+    # print(f"{start_educations}")
+    # print(f"{end_educations}")
 
     return schools, degrees, study_fields, formatted_start_edus, formatted_end_edus
 
