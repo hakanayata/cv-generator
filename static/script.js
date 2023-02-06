@@ -1,5 +1,23 @@
 // refrence: https://www.geeksforgeeks.org/how-to-create-a-form-dynamically-with-the-javascript/
 
+const startMonthSelect = document.getElementById("start-month")
+const startYearSelect = document.getElementById("start-year")
+
+const endMonthSelect = document.getElementById("end-month")
+const endYearSelect = document.getElementById("end-year")
+
+// hidden inputs for backend
+const startExp = document.getElementById("start-exp")
+const endExp = document.getElementById("end-exp")
+
+
+// first instance of month + year select options
+// this will be showed on load
+populateMonths(startMonthSelect)
+populateYears(startYearSelect)
+populateMonths(endMonthSelect)
+populateYears(endYearSelect)
+
 // todo: dynamic experience form
 
 // select experience div and 'add new' button
@@ -35,9 +53,9 @@ addBtn.addEventListener('click', () => {
 
         // JOB TITLE
         // label element for job title
-        let label_jt = document.createElement("label")
-        label_jt.innerHTML = "Job Title"
-        label_jt.setAttribute("class", "text-secondary")
+        let label_jt = labelMaker("Job Title")
+        // label_jt.innerHTML = "Job Title"
+        // label_jt.setAttribute("class", "text-secondary")
 
         // input element for job title
         let job_title = document.createElement("input")
@@ -47,9 +65,9 @@ addBtn.addEventListener('click', () => {
 
         // COMPANY
         // label el for company
-        let label_company = document.createElement("label")
-        label_company.innerHTML = "Company"
-        label_company.setAttribute("class", "text-secondary")
+        let label_company = labelMaker("Company")
+        // label_company.innerHTML = "Company"
+        // label_company.setAttribute("class", "text-secondary")
 
         // input el for company
         let company = document.createElement("input")
@@ -58,10 +76,8 @@ addBtn.addEventListener('click', () => {
         company.setAttribute("name", "company")
 
         // JOB / EXPERIENCE ADDRESS
-        // label el for job-address
-        let label_address = document.createElement("label")
-        label_address.innerHTML = "City, State, Country"
-        label_address.setAttribute("class", "text-secondary")
+        // label for job-address
+        let label_address = labelMaker("City, State, Country")
 
         // input el for job-address
         let job_address = document.createElement("input")
@@ -69,29 +85,14 @@ addBtn.addEventListener('click', () => {
         job_address.setAttribute("type", "text")
         job_address.setAttribute("name", "job-address")
 
+        // todo: 2 separate pickers - start exp
         // EXP START DATE
         // label for exp start date
-        let label_start_exp = document.createElement("label")
-        label_start_exp.innerHTML = "Start date"
-        label_start_exp.setAttribute("class", "text-secondary")
-
-        // input for exp start date
-        let start_experience = document.createElement("input")
-        start_experience.setAttribute("class", "form-control my-2 w-auto")
-        start_experience.setAttribute("type", "month")
-        start_experience.setAttribute("name", "start-exp")
-
-        // EXP END DATE
-        // label for exp end date
-        let label_end_exp = document.createElement("label")
-        label_end_exp.innerHTML = "End date"
-        label_end_exp.setAttribute("class", "text-secondary")
-
-        // input for exp end date
-        let end_experience = document.createElement("input")
-        end_experience.setAttribute("class", "form-control my-2 w-auto")
-        end_experience.setAttribute("type", "month")
-        end_experience.setAttribute("name", "end-exp")
+        let label_start_exp = labelMaker(str = "start date")
+        let date_picker_start = separate_date_picker_maker('start', 'exp')
+        let label_end_exp = labelMaker(str = "end date")
+        let date_picker_end = separate_date_picker_maker('end', 'exp')
+        // todo:  E   N   D
 
         // append new elements into experience section
         experience_div.appendChild(hr)
@@ -102,9 +103,11 @@ addBtn.addEventListener('click', () => {
         experience_div.appendChild(label_address)
         experience_div.appendChild(job_address)
         experience_div.appendChild(label_start_exp)
-        experience_div.appendChild(start_experience)
+        // experience_div.appendChild(start_experience)
+        experience_div.appendChild(date_picker_start)
         experience_div.appendChild(label_end_exp)
-        experience_div.appendChild(end_experience)
+        experience_div.appendChild(date_picker_end)
+        // experience_div.appendChild(end_experience)
         exp_section.appendChild(experience_div)
 
         count_extra_exp++
@@ -199,29 +202,27 @@ addBtnEdu.addEventListener('click', () => {
         study_field.setAttribute("type", "text")
         study_field.setAttribute("name", "study-field")
 
-        // EXP START DATE
-        // label for exp start date
-        let label_start_edu = document.createElement("label")
-        label_start_edu.innerHTML = "Start date"
-        label_start_edu.setAttribute("class", "text-secondary")
+        // EDU START DATE
+        // label for edu start date
+        const label_start_edu = labelMaker("start date")
+        // inputs for edu start date
+        const start_education = separate_date_picker_maker("start", "edu")
+        // label for edu end date
+        const label_end_edu = labelMaker("end date")
+        // inputs for edu end date
+        const end_education = separate_date_picker_maker("end", "edu")
 
-        // input for exp start date
-        let start_education = document.createElement("input")
-        start_education.setAttribute("class", "form-control my-2 w-auto")
-        start_education.setAttribute("type", "month")
-        start_education.setAttribute("name", "start-edu")
 
         // EXP END DATE
-        // label for exp end date
-        let label_end_edu = document.createElement("label")
-        label_end_edu.innerHTML = "End date"
-        label_end_edu.setAttribute("class", "text-secondary")
+        // let label_end_edu = document.createElement("label")
+        // label_end_edu.innerHTML = "End date"
+        // label_end_edu.setAttribute("class", "text-secondary")
 
         // input for exp end date
-        let end_education = document.createElement("input")
-        end_education.setAttribute("class", "form-control my-2 w-auto")
-        end_education.setAttribute("type", "month")
-        end_education.setAttribute("name", "end-edu")
+        // let end_education = document.createElement("input")
+        // end_education.setAttribute("class", "form-control my-2 w-auto")
+        // end_education.setAttribute("type", "month")
+        // end_education.setAttribute("name", "end-edu")
 
 
         // append new elements into experience section
@@ -349,3 +350,88 @@ function delExtraSkill(id) {
     console.log(idNoList)
 
 }
+
+
+function populateYears(parent) {
+    const now = new Date()
+    const thisYear = now.getFullYear()
+
+    // make this year, and 60 years before it available in the year selection
+    for (let i = 0; i <= 60; i++) {
+        const option = document.createElement("option")
+        option.setAttribute("value", thisYear - i)
+        option.textContent = thisYear - i
+        parent.appendChild(option)
+    }
+
+}
+
+function populateMonths(parent) {
+    for (let i = 1; i <= 12; i++) {
+        const option = document.createElement("option")
+        option.setAttribute("value", i)
+        option.textContent = i
+        parent.appendChild(option)
+
+    }
+}
+
+function labelMaker(str, color = "primary-emphasis", fw = "fw-normal") {
+    let label = document.createElement("label")
+    label.textContent = `${str.charAt(0).toUpperCase() + str.slice(1)}`
+    label.setAttribute("class", `text-${color} ${fw}`)
+    return label
+}
+
+
+function separate_date_picker_maker(time, section) {
+
+    let div_separate_date_pickers;
+
+    div_separate_date_pickers = document.createElement("div")
+    div_separate_date_pickers.setAttribute("class", "d-flex align-items-center justify-content-start my-2 gap-2")
+
+    let label1 = labelMaker("Month:", "secondary", "fw-light")
+    div_separate_date_pickers.appendChild(label1)
+
+    let month_selection = document.createElement("select")
+    month_selection.setAttribute("class", "form-select w-auto")
+    month_selection.setAttribute("name", `${time}-month-${section}`)
+    populateMonths(month_selection)
+    div_separate_date_pickers.appendChild(month_selection)
+
+    let label2 = labelMaker("Year:", "secondary", "fw-light")
+    // left margin for year label
+    label2.classList.add("ms-3")
+    div_separate_date_pickers.appendChild(label2)
+
+    let year_selection = document.createElement("select")
+    year_selection.setAttribute("class", "form-select w-auto")
+    year_selection.setAttribute("name", `${time}-year-${section}`)
+    populateYears(year_selection)
+    div_separate_date_pickers.appendChild(year_selection)
+
+    let hiddenStrDate = document.createElement("input")
+    hiddenStrDate.setAttribute("class", "form-control w-auto")
+    hiddenStrDate.setAttribute("name", `${time}-${section}`)
+    div_separate_date_pickers.appendChild(hiddenStrDate)
+
+
+    return div_separate_date_pickers
+
+}
+
+const monthBtns = document.querySelectorAll(".month-btn")
+const yearBtns = document.querySelectorAll(".year-btn")
+
+monthBtns.forEach(btn => {
+    btn.addEventListener('change', () => {
+        btn.parentElement.querySelector("input").value = btn.value
+    })
+})
+
+yearBtns.forEach(btn => {
+    btn.addEventListener('change', () => {
+        btn.parentElement.querySelector("input").value = btn.value
+    })
+})
