@@ -10,9 +10,9 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # ! for local
-# UPLOAD_FOLDER = 'static'
+UPLOAD_FOLDER = 'static'
 # ! for PythonAnywhere /home/<username>/<project name>/static
-UPLOAD_FOLDER = '/home/cvgenerator/cv-generator/static'
+# UPLOAD_FOLDER = '/home/cvgenerator/cv-generator/static'
 ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 
 # ensure templates are auto-reloaded
@@ -107,131 +107,177 @@ def main():
         pdf.set_font("DejaVuSans-Bold", "", size=24)
         pdf.set_fill_color(20, 20, 70)
         pdf.set_text_color(250, 250, 250)
-        pdf.cell(w=190, h=44,
+        pdf.cell(w=190, h=32,
                  align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
-        # get image size with PILLOW
+
+        # open image (read file)
         img = Image.open(f"{UPLOAD_FOLDER}/{picture_name}")
         # the line below solved the issue where portrait photos would be auto-rotated 90 deg
         # for more: https://github.com/python-pillow/Pillow/issues/4703
         img = ImageOps.exif_transpose(img)
+        # get image size with
         width, height = img.size
-        # calculate the constant, that convert the picture to have a desired height of 40 mm
-        # 1 mm 3.779528px
-        constant = height / (40 * 3.779528)
+        # calculate the constant, that will convert the picture
+        # to have a desired height of 30 mm (1 mm 3.779528px)
+        constant = height / (30 * 3.779528)
         height = int(height / constant)
         # calculate the width with the constant
         width = int(width / constant)
         img = img.resize((width, height))
         # img = img.rotate(270)
         # set image horizontally in the middle
-        pdf.image(img, x=((210 - (width/3.779528)) / 2), y=14,
-                  h=40, alt_text="profile picture")
+        pdf.image(img, x=((210 - (width/3.779528)) / 2), y=10,
+                  h=30, alt_text="profile picture")
         # pdf.round_clip(x=10, y=10, r=50)
 
         # ! Name
-        pdf.set_font("DejaVuSans-Bold", "", size=24)
-        pdf.set_fill_color(20, 20, 70)
-        pdf.set_text_color(250, 250, 250)
-        # page width 210mm but default margin 1cm from left + right
-        pdf.cell(
-            w=190, h=20, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
+        try:
+            pdf.set_font("DejaVuSans-Bold", "", size=24)
+            pdf.set_fill_color(20, 20, 70)
+            pdf.set_text_color(250, 250, 250)
+            # page width 210mm but default margin 1cm from left + right
+            pdf.cell(
+                w=190, h=18, txt=f"{first_name} {last_name}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
 
         # ! Contact
-        pdf.set_font("DejaVuSans", "", size=10)
-        pdf.set_fill_color(120, 20, 70)
-        pdf.set_text_color(250, 250, 250)
-        pdf.cell(
-            w=190, h=6, txt=f"{address} | {phone_number} | {email}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
+        try:
+            pdf.set_font("DejaVuSans", "", size=10)
+            pdf.set_fill_color(120, 20, 70)
+            pdf.set_text_color(250, 250, 250)
+            pdf.cell(
+                w=190, h=6, txt=f"{address} | {phone_number} | {email}", align="C", fill=True, new_x="LMARGIN", new_y="NEXT")
 
-        # line break
-        pdf.ln(4)
-        # ! Target Job Title
-        pdf.set_font("DejaVuSans-Bold", "", size=16)
-        pdf.set_text_color(20, 20, 70)
-        pdf.cell(w=190, h=10, txt=f"{target_job_title}", align="C",
-                 new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(4)
-
-        # ? CAREER OBJECTIVE
-        if career_objective:
-            pdf.set_font("DejaVuSans", "", size=12)
-            pdf.set_fill_color(240, 240, 240)
-            pdf.set_text_color(20, 20, 20)
-            pdf.multi_cell(w=190, h=8, txt=f"{career_objective}", border=1, fill=True,
-                           align="L", new_x="LMARGIN", new_y="NEXT")
             # line break
             pdf.ln(4)
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
+
+        # ! Target Job Title
+        try:
+            pdf.set_font("DejaVuSans-Bold", "", size=16)
+            pdf.set_text_color(20, 20, 70)
+            pdf.cell(w=190, h=10, txt=f"{target_job_title}", align="C",
+                     new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(4)
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
+
+        # ? CAREER OBJECTIVE
+        try:
+            if career_objective:
+                pdf.set_font("DejaVuSans", "", size=12)
+                pdf.set_fill_color(240, 240, 240)
+                pdf.set_text_color(20, 20, 20)
+                pdf.multi_cell(w=190, h=8, txt=f"{career_objective}", border=1, fill=True,
+                               align="L", new_x="LMARGIN", new_y="NEXT")
+                # line break
+                pdf.ln(4)
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
 
         # ? EXPERIENCE
         # ! title
-        pdf.set_font("DejaVuSans-Bold", "", size=14)
-        pdf.set_fill_color(10, 10, 50)
-        pdf.set_text_color(250, 250, 250)
-        pdf.cell(w=190, h=8, txt=f"EXPERIENCE", align="C",
-                 fill=True, new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(4)
-
-        # iterate over experiences list (length is same for each list, job_titles taken in this case)
-        for i in range(len(job_titles)):
-            # ! job title
-            pdf.set_font("DejaVuSans-Bold", "", size=12)
-            pdf.set_fill_color(240, 240, 240)
-            pdf.set_text_color(40, 40, 40)
-            pdf.cell(w=190, h=6, txt=f"{job_titles[i]}", align="L",
+        try:
+            pdf.set_font("DejaVuSans-Bold", "", size=14)
+            pdf.set_fill_color(10, 10, 50)
+            pdf.set_text_color(250, 250, 250)
+            pdf.cell(w=190, h=8, txt=f"EXPERIENCE", align="C",
                      fill=True, new_x="LMARGIN", new_y="NEXT")
-            # ! company, adress, dates, duration
-            pdf.set_font("DejaVuSans", "", size=12)
-            pdf.set_text_color(20, 20, 70)
-            pdf.cell(w=190, h=6, txt=f"{companies[i]} | {job_addresses[i]}",
-                     align="L", new_x="LMARGIN", new_y="NEXT")
-            pdf.cell(w=190, h=6, txt=f"{formatted_start_exps[i]} - {formatted_end_exps[i]} | {exp_durations[i]}",
-                     align="L", new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(4)
 
-            pdf.ln(2)
+            # iterate over experiences list (length is same for each list, job_titles taken in this case)
+            for i in range(len(job_titles)):
+                # ! job title
+                pdf.set_font("DejaVuSans-Bold", "", size=12)
+                pdf.set_fill_color(240, 240, 240)
+                pdf.set_text_color(40, 40, 40)
+                pdf.cell(w=190, h=6, txt=f"{job_titles[i]}", align="L",
+                         fill=True, new_x="LMARGIN", new_y="NEXT")
+                # ! company, adress, dates, duration
+                pdf.set_font("DejaVuSans", "", size=12)
+                pdf.set_text_color(20, 20, 70)
+                pdf.cell(w=190, h=6, txt=f"{companies[i]} | {job_addresses[i]}",
+                         align="L", new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(w=190, h=6, txt=f"{formatted_start_exps[i]} - {formatted_end_exps[i]} | {exp_durations[i]}",
+                         align="L", new_x="LMARGIN", new_y="NEXT")
+
+                pdf.ln(2)
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
 
         # ? EDUCATION
         # ! title
-        pdf.set_font("DejaVuSans-Bold", "", size=14)
-        pdf.set_fill_color(10, 10, 50)
-        pdf.set_text_color(250, 250, 250)
-        pdf.cell(w=190, h=8, txt=f"EDUCATION", align="C",
-                 fill=True, new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(4)
-
-        # iterating over any of the list returned from get_education() function
-        # because all of them have the same length
-        for i in range(len(schools)):
-            # ! school
-            pdf.set_font("DejaVuSans-Bold", "", size=12)
-            pdf.set_fill_color(240, 240, 240)
-            pdf.set_text_color(40, 40, 40)
-            pdf.cell(w=190, h=6, txt=f"{schools[i]}", align="L",
+        try:
+            pdf.set_font("DejaVuSans-Bold", "", size=14)
+            pdf.set_fill_color(10, 10, 50)
+            pdf.set_text_color(250, 250, 250)
+            pdf.cell(w=190, h=8, txt=f"EDUCATION", align="C",
                      fill=True, new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(4)
 
-            # ! degree, field, dates
-            pdf.set_font("DejaVuSans", "", size=12)
-            pdf.set_text_color(20, 20, 70)
-            pdf.cell(w=190, h=6, txt=f"{degrees[i]}, {study_fields[i]}",
-                     align="L", new_x="LMARGIN", new_y="NEXT")
-            pdf.cell(w=190, h=6, txt=f"{formatted_start_edus[i]} - {formatted_end_edus[i]}",
-                     align="L", new_x="LMARGIN", new_y="NEXT")
+            # iterating over any of the list returned from get_education() function
+            # because all of them have the same length
+            for i in range(len(schools)):
+                # ! school
+                pdf.set_font("DejaVuSans-Bold", "", size=12)
+                pdf.set_fill_color(240, 240, 240)
+                pdf.set_text_color(40, 40, 40)
+                pdf.cell(w=190, h=6, txt=f"{schools[i]}", align="L",
+                         fill=True, new_x="LMARGIN", new_y="NEXT")
 
-            pdf.ln(2)
+                # ! degree, field, dates
+                pdf.set_font("DejaVuSans", "", size=12)
+                pdf.set_text_color(20, 20, 70)
+                pdf.cell(w=190, h=6, txt=f"{degrees[i]}, {study_fields[i]}",
+                         align="L", new_x="LMARGIN", new_y="NEXT")
+                pdf.cell(w=190, h=6, txt=f"{formatted_start_edus[i]} - {formatted_end_edus[i]}",
+                         align="L", new_x="LMARGIN", new_y="NEXT")
+
+                pdf.ln(2)
+
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
 
         # ? SKILLS
         # ! title
-        pdf.set_font("DejaVuSans-Bold", "", size=14)
-        pdf.set_fill_color(10, 10, 50)
-        pdf.set_text_color(250, 250, 250)
-        pdf.cell(w=190, h=8, txt=f"SKILLS", align="C",
-                 fill=True, new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(4)
+        try:
+            pdf.set_font("DejaVuSans-Bold", "", size=14)
+            pdf.set_fill_color(10, 10, 50)
+            pdf.set_text_color(250, 250, 250)
+            pdf.cell(w=190, h=8, txt=f"SKILLS", align="C",
+                     fill=True, new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(4)
 
-        # skill | skill | skill
-        pdf.set_font("DejaVuSans", "", size=12)
-        pdf.set_text_color(20, 20, 70)
-        pdf.multi_cell(w=190, h=8, txt=f"{skill_formatter(skills)}",
-                       align="L", new_x="LMARGIN", new_y="NEXT")
+            # skill | skill | skill
+            pdf.set_font("DejaVuSans", "", size=12)
+            pdf.set_text_color(20, 20, 70)
+            pdf.multi_cell(w=190, h=8, txt=f"{skill_formatter(skills)}",
+                           align="L", new_x="LMARGIN", new_y="NEXT")
+        except:
+            # ? DELETE UPLOADED IMAGE FILE
+            os.remove(f"{UPLOAD_FOLDER}/{picture_name}")
+            flash("Sorry, an error has occured!")
+            return redirect("/")
 
         # ? DELETE UPLOADED IMAGE FILE
         os.remove(f"{UPLOAD_FOLDER}/{picture_name}")

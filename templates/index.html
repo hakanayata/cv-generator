@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A web application that turns a form into a CV in portable document format (PDF).">
     <title>CV Generator</title>
     <link rel="stylesheet" href="/static/styles.css">
     <!-- bootstrap css cdn -->
@@ -20,7 +21,7 @@
 
 <body class="bg-dark">
     <div class="container">
-        <h1 class="mt-3 text-light"> <a href="/" class="nav-brand">📜</a>CV Generator</h1>
+        <h1 class="mt-4 text-light"> <a href="/" class="nav-brand">📜</a>CV Generator</h1>
         <hr>
         {% if get_flashed_messages() %}
         <div class="alert alert-danger text-center" role="alert">
@@ -49,7 +50,7 @@
                             <input class="form-control my-2 w-auto" name="phonenumber" type="number"
                                 placeholder="Phone Number">
                             <input class="form-control my-2 w-auto" name="email" type="email" placeholder="Email">
-                            <label class="form-label mt-3 text-secondary" for="pic">Profile Picture</label>
+                            <label class="form-label mt-3 text-primary-emphasis" for="pic">Profile Picture</label>
                             <input class="form-control my-2 w-auto" name="picture" id="pic" type="file"
                                 accept=".png, .jpg, .jpeg" required>
                         </div>
@@ -117,8 +118,7 @@
                             <label class="text-primary-emphasis">City, State, Country</label>
                             <input class="form-control mb-2 w-auto" type="text" name="job-address" required>
                             <label class="text-primary-emphasis">Start date</label>
-                            <!-- <input class="form-control mb-2 w-auto" type="month" name="start-exp" min="1992-01"
-                                max="2040-12" required> -->
+
                             <div class="d-flex align-items-center justify-content-start gap-2">
                                 <label class="fw-light text-secondary">Month:</label>
                                 <select class="form-select my-2 w-auto month-btn" name="start-month" id="start-month">
@@ -128,7 +128,8 @@
                                 <select class="form-select w-auto year-btn" name="start-year" id="start-year">
 
                                 </select>
-                                <input class="form-control w-auto hid" type="text" name="start-exp" id="start-exp">
+                                <input class="d-none form-control w-auto hid" type="text" name="start-exp"
+                                    id="start-exp">
                             </div>
                             <label class="text-primary-emphasis">End date</label>
                             <div class="d-flex align-items-center justify-content-start gap-2">
@@ -140,11 +141,9 @@
                                 <select class="form-select w-auto year-btn" name="end-year" id="end-year">
 
                                 </select>
-                                <input class="form-control w-auto hid" type="text" name="end-exp" id="end-exp">
+                                <input class="d-none form-control w-auto hid" type="text" name="end-exp" id="end-exp">
                             </div>
 
-                            <!-- <input class="form-control mb-2 w-auto" type="month" name="end-exp" min="1992-07"
-                                max="2040-12" required> -->
                         </div>
                         <div class="accordion-body">
                             <button class="btn btn-lg btn-outline-success mb-2 mt-1 px-4 w-auto" type="button"
@@ -172,11 +171,33 @@
                             <label class="text-primary-emphasis">Field of study</label>
                             <input class="form-control mb-2 w-auto" type="text" name="study-field" required>
                             <label class="text-primary-emphasis">Start date</label>
-                            <!-- <input class="form-control mb-2 w-auto" type="month" name="start-edu" min="1992-07"
-                                max="2040-12" required> -->
+                            <div class="d-flex align-items-center justify-content-start gap-2">
+                                <label class="fw-light text-secondary">Month:</label>
+                                <select class="form-select my-2 w-auto month-btn" name="start-month"
+                                    id="start-month-edu">
+
+                                </select>
+                                <label class="fw-light text-secondary ms-3">Year:</label>
+                                <select class="form-select w-auto year-btn" name="start-year" id="start-year-edu">
+
+                                </select>
+                                <input class="d-none form-control w-auto hid" type="text" name="start-edu"
+                                    id="start-edu">
+                            </div>
+
                             <label class="text-primary-emphasis">End date</label>
-                            <!-- <input class="form-control mb-2 w-auto" type="month" name="end-edu" min="1992-07"
-                                max="2040-12" required> -->
+                            <div class="d-flex align-items-center justify-content-start gap-2">
+                                <label class="fw-light text-secondary">Month:</label>
+                                <select class="form-select my-2 w-auto month-btn" name="end-month" id="end-month-edu">
+
+                                </select>
+                                <label class="fw-light text-secondary ms-3">Year:</label>
+                                <select class="form-select w-auto year-btn" name="end-year" id="end-year-edu">
+
+                                </select>
+                                <input class="d-none form-control w-auto hid" type="text" name="end-edu" id="end-edu">
+                            </div>
+
                         </div>
                         <div class="accordion-body">
                             <button class="btn btn-lg btn-outline-success mb-2 mt-1 px-4 w-auto" type="button"
@@ -197,21 +218,17 @@
                     <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body" id="accordion-body-skills">
-                            <label class="text-secondary">Skill</label>
+                            <label class="text-primary-emphasis">Skill</label>
                             <input class="form-control my-2 w-auto" type="text" name="skill" required>
                         </div>
                         <div class="accordion-body">
                             <button class="btn btn-outline-success mb-2 mt-1 px-5 w-auto" type="button"
                                 id="add-skill">Add New</button>
-                            <!-- <button class="btn btn-outline-danger mb-2 mt-1 mx-5 px-4 w-auto" type="button"
-                                id="delete-skill">➖</button> -->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- <div class="d-grid gap-2 d-md-block"> -->
             <button class="btn btn-primary my-3 mx-auto w-100" type="submit">Generate CV</button>
-            <!-- </div> -->
         </form>
 
         <!-- Bootstrap's JavaScript file -->
