@@ -10,9 +10,9 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # ! for local
-UPLOAD_FOLDER = 'static'
+# UPLOAD_FOLDER = 'static'
 # ! for PythonAnywhere /home/<username>/<project name>/static
-# UPLOAD_FOLDER = '/home/cvgenerator/cv-generator/static'
+UPLOAD_FOLDER = '/home/cvgenerator/cv-generator/static'
 ALLOWED_EXTENSIONS = {'jpg', 'png', 'jpeg'}
 
 # ensure templates are auto-reloaded
