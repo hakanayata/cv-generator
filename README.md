@@ -10,13 +10,17 @@ This web application was made as a [final project](https://cs50.harvard.edu/pyth
 
 CV-Generator helps users to create a portable document format (pdf) of a CV (*Curriculum Vitae*) after filling out a single page form.
 
+## Quick Demo
+
+![CV-Generator-Quick-Demo](static/cv-generator-quick-demo.gif)
+
 ## Features
 - **Personal Information** section where users type their name, address, upload their picture, etc.
-- **Target Job Title** section
+- **Target Job Title** section lets users add a target job title they have been aiming for to their resume.
 - **Experience** section where users enter up to five vocational experiences.
-- **Education** section allows user to add up to five different educational fields on their CV.
-- **Skills** section where users type their skills which make them stand out in the job market.
-- **Functions** for formatting data which were also included in unit test:
+- **Education** section allows users to add up to five different educational fields.
+- **Skills** section where users type their skills that make them stand out in the job market.
+- **Functions** for formatting data which were also included in unit tests:
   - `get_duration()` is a function which takes two dates as arguments and calculates the duration between two dates and returns that duration in years and months.
   - `date_formatter()` is a function which takes a date as an argument in 'YYYY-MM' format and returns a string type of the date in 'MM.YYYY' format.
   - `skill_formatter()` is a function which takes an array of strings of skills as an argument and returns just a single string with pipe '|' added between each skills. 
